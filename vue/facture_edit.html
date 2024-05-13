@@ -5,35 +5,35 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Edition d'une facture</title>
   <link type="text/css" rel="stylesheet" href="./css/inventaire.css">
-  <link type="text/css" rel="stylesheet" href="./css/salle_edit.css">
+  <link type="text/css" rel="stylesheet" href="./css/facture_edit.css">
 </head>
 
 <body>
-    <div id="div_salle_titre" class="divtitre"> Détail d'une facture</div>
-    <div id="div_salle_detail">
-      <div class="salle_rubrique">
+    <div id="div_facture_titre" class="divtitre"> Détail d'une facture</div>
+    <div id="div_facture_detail">
+      <div class="facture_rubrique">
         <div>
             <span class="labeltitre">IDENTIFICATION</span><label id="lbl_erreur_num" class="labelerreur"></label>
         </div>
         <div>
-          <label for="edt_salle_num">numéro</label>
-          <span><input id="edt_salle_num" placeholder="n° idt" maxlength="5" size="5" type="text"></span>
-          <span><input id="edt_salle_lib" placeholder="Saisie de commentaire" size="30" type="text"> </span>
+          <label for="edt_facture_num">numéro</label>
+          <span><input id="edt_facture_num" placeholder="n° idt" maxlength="5" size="5" type="text"></span>
+          <span><input id="edt_facture_lib" placeholder="Saisie de commentaire" size="30" type="text"> </span>
         </div>
         <div>
-          <label for="edt_salle_etage">le</label>
-          <span><input id="edt_salle_etage" size="5" type="text"></span><label id="lbl_erreur_etage" class="labelerreur"></label>
+          <label for="edt_facture_date">le</label>
+          <span><input id="edt_facture_date" size="5" type="text"></span><label id="lbl_erreur_etage" class="labelerreur"></label>
         </div>
       </div>
-      <div class="salle_rubrique">
+      <div class="facture_rubrique">
         <div> <span class="labeltitre">CLIENT</span><label id="lbl_erreur_dept" class="labelerreur"></label>
         </div>
-        <div> <label for="edt_salle_codedept">Numéro</label>
-          <span><input id="edt_salle_codedept" placeholder="n° client" size="5" type="text"></span>
-          <label id="lbl_salle_detail_dept" class="salle_commentaire"></label>
+        <div> <label for="edt_facture_num_client">Numéro</label>
+          <span><input id="edt_facture_num_client" placeholder="n° client" size="5" type="text"></span>
+          <label id="lbl_facture_detail_client" class="facture_commentaire"></label>
         </div>
       </div>
-      <div class="salle_rubrique">
+      <div class="facture_rubrique">
         <div> 
             <span class="labeltitre">INFOS COMMERCIALES</span>
         </div>
@@ -48,23 +48,23 @@
           <label for="edt_discount">Remise</label>
           <div id="pourcentage">
             <input id="edt_discount" type="number" value="10" class="discount_input">
-            <span>%</span> 
+l            <span>%</span> 
           </div>
       </div>
   </div>
     
 
-      <div class="salle_rubrique">
+      <div class="facture_rubrique">
         <div> <span class="labeltitre">PRODUITS</span><label id="lbl_erreur_equipt" class="labelerreur"></label>
         </div>
       </div>
-      <div class="salle_sousrubrique">
-        <div id="div_salle_equipement">
+      <div class="facture_sousrubrique">
+        <div id="div_facture_contenue">
           <div class="divtitre" >
             HT: - Remise: - A payer:
-            <label id="lbl_equipement_total"> </label> <!--Je vous laisse cette ligne pour comprendre comment vous afficher le HT etc...-->
+            <label id="lbl_contenue_total"> </label> <!--Je vous laisse cette ligne pour comprendre comment vous afficher le HT etc...-->
           </div>
-          <table id="table_equipement" class="display compact hover" >
+          <table id="table_contenue" class="display compact hover" >
             <thead>
               <tr>
                 <th>code</th>
@@ -81,30 +81,30 @@
           </table>
           
           <div class="divaction">
-            <input id="btn_equipement_ajouter"   type="button" 				  		value="Ajouter">     		
+            <input id="btn_contenue_ajouter"   type="button" 				  		value="Ajouter">     		
           </div>
         </div>
   
-        <div id="div_salle_equipement_edit">
+        <div id="div_facture_contenue_edit">
           <div class="divtitre" >
             Choisir un produit dans la liste
           </div>
-          <div class="equipement_rubrique">
+          <div class="contenue_rubrique">
             <div>
-              <select id="select_equipement" size="6"></select>
+              <select id="select_contenue" size="6"></select>
               <div>
-                <label id="lbl_erreur_select_equipement" class="labelerreur"></label>
+                <label id="lbl_erreur_select_contenue" class="labelerreur"></label>
               </div>    
             </div>
             <div>
-              <label for="edt_equipement_qte">quantité</label>
-              <span><input id="edt_equipement_qte" size="5" type="text"></span>
+              <label for="edt_contenue_qte">quantité</label>
+              <span><input id="edt_contenue_qte" size="5" type="text"></span>
               <div>
                 <label id="lbl_erreur_qte" class="labelerreur"></label>
               </div>
               <div> 
-                <input id="btn_equipement_valider" type="button" >  
-                <input id="btn_equipement_annuler" type="button" >    
+                <input id="btn_contenue_valider" type="button" >  
+                <input id="btn_contenue_annuler" type="button" >    
               </div>
             </div>        
           </div>
@@ -112,13 +112,13 @@
       </div>
 
       <div class="divaction">
-        <input id="btn_salle_retour" class="btnretour" value="Retour" type="button">
-        <input id="btn_salle_valider" value="Valider" type="button">
-        <input id="btn_salle_annuler" class="btnannuler" value="Annuler" type="button">
+        <input id="btn_facture_retour" class="btnretour" value="Retour" type="button">
+        <input id="btn_facture_valider" value="Valider" type="button">
+        <input id="btn_facture_annuler" class="btnannuler" value="Annuler" type="button">
       </div>
     </div>
   </body>
-  <script type="module" src="../controleur/salle_edit.js"></script>
+  <script type="module" src="../controleur/facture_edit.js"></script>
 
 
 </html>
