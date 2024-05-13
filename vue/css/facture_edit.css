@@ -25,17 +25,17 @@
   border-bottom : 2px solid #808080;  
 }
 
-.contenue_rubrique{
+.equipement_rubrique{
   display 	: grid;
   grid-template-columns : 1fr 1fr; 
 }
-#btn_contenue_valider {
+#btn_equipement_valider {
   margin : 10px;
   width  : 50px;
   height : 50px;
   background:url(valider.png) no-repeat center center;
 }
-#btn_contenue_annuler {
+#btn_equipement_annuler {
   margin : 10px;
   width  : 50px;
   height : 50px;
