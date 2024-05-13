@@ -1,17 +1,17 @@
 
 class DonneListe {
-    numero: number;
-    date: Date;
-    client: number;
-    remise: boolean;
-    livraison: number;
+    private _numero: number;
+    private _date: Date;
+    private _client: number;
+    private _remise: boolean;
+    private _livraison: number;
 
     constructor(numero: number, date: Date, client: number, remise: boolean, livraison: number) {
-        this.numero = numero;
-        this.date = date;
-        this.client = client;
-        this.remise = remise;
-        this.livraison = livraison;
+        this._numero = numero;
+        this._date = date;
+        this._client = client;
+        this._remise = remise;
+        this._livraison = livraison;
     }
 }
 
