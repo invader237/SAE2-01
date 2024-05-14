@@ -1,14 +1,15 @@
-import {UneSalle, LesSalles}	from "../modele/data_salle.js"
-import {UnDept, LesDepts}		from "../modele/data_departement.js"
-import {UnTypEquiptBySalle, LesTypEquiptsBySalle, TTypEquiptsBySalle, UnTypEquipt, LesTypEquipts}	from "../modele/data_equipement.js"
+import { DonneListe }	from "./class_facture_liste"
+
 
 type TFactureEditForm = { 
 	divDetail:HTMLElement, 
     divTitre:HTMLElement,
 	edtNum:HTMLInputElement, 
     edtLib:HTMLInputElement, 
-    edtEtage:HTMLInputElement, 
-    edtCodeDept:HTMLInputElement,
+    edtDate:HTMLInputElement, 
+    edtClient:HTMLInputElement,
+	edtLivraison: HTMLElement,
+	edtRemise: HTMLInputElement,
 	btnRetour:HTMLInputElement, 
     btnValider:HTMLInputElement, 
     btnAnnuler:HTMLInputElement,
@@ -17,25 +18,148 @@ type TFactureEditForm = {
     lblEtageErreur:HTMLLabelElement, 
     lblDeptErreur:HTMLLabelElement, 
     lblEquiptErreur:HTMLLabelElement 
-	divSalleEquipt : HTMLDivElement, 
-    divSalleEquiptEdit : HTMLDivElement ,
-	btnAjouterEquipt:HTMLInputElement, 
+	divFacture : HTMLDivElement, 
+    divFactureEdit : HTMLDivElement ,
+	btnAjouterFacture:HTMLInputElement, 
     lblTotal : HTMLLabelElement, 
-    tableEquipement : HTMLTableElement
-	listeEquipt:HTMLSelectElement, 
-    edtQte:HTMLInputElement, 
+    tableContenue : HTMLTableElement
+	listeContenue:HTMLSelectElement, 
+    edtQte:HTMLInputElement,
+	edtContenueQte : HTMLElement
     btnValiderEquipt:HTMLInputElement, 
     btnAnnulerEquipt:HTMLInputElement, 
     lblSelectEquiptErreur:HTMLLabelElement, 
     lblQteErreur:HTMLLabelElement,
 }
 
+class DonneListe {
+    private _numero: number;
+    private _date: Date;
+    private _client: number;
+    private _nomClient: string;
+    private _prix: number;
+    private _remise: number;
+    private _livraison: number;
+
+    constructor(numero: number, date: Date, client: number, nomClient: string,prix:number, remise: number, livraison: number) {
+        this._numero = numero;
+        this._date = date;
+        this._client = client;
+        this._nomClient = nomClient;
+        this._prix = prix;
+        this._remise = remise;
+        this._livraison = livraison;
+    }
+
+    avecRemise():number{
+        return this._prix-this._prix*this._remise
+    }
+
+    get numero():number{
+        return this._numero
+    }
+
+    get date():Date{
+        return this._date
+    }
+
+    get client():number{
+        return this._client
+    }
+
+    get nomClient(): string{
+        return this._nomClient
+    }
+    
+    get prix():number{
+        return this._prix
+    }
+
+    get remise():number{
+        return this._remise
+    }
+
+    get livraison():number{
+        return this._livraison
+    }
+
+    set numero(numero:number){
+        this._numero=numero
+    }
+    set date(date:Date){
+        this._date=date
+    }
+    set client(client:number){
+        this._client=client
+    }
+    set nomClient(nomClient:string){
+        this._nomClient=nomClient
+    }
+    set prix(prix:number){
+        this._prix=prix
+    }
+    set remise(remise:number){
+        this._remise=remise
+    }
+    set livraison(livraison:number){
+        this._livraison=livraison
+    }
+
+}
+
+class UnProduit {
+	private _codeProduit:number;
+	private _libProduit:string;
+	private _typeProduit:string;
+	private _condProduit:number;
+	private _puProduit:number;
+	private _qteProduit:number;
+
+	constructor(codeProduit: number, libProduit: string, typeProduit: string, condProduit: number, puProduit: number, qteProduit: number){
+		this._codeProduit = codeProduit;
+		this._libProduit = libProduit;
+		this._typeProduit = typeProduit;
+		this._condProduit = condProduit;
+		this._puProduit = puProduit;
+		this._qteProduit = qteProduit;
+	}
+
+	montant():number{
+		return this._puProduit*this._qteProduit
+	}
+
+	get codeProduit():number{
+		return this._codeProduit
+	}
+
+	get libProduit(): string{
+		return this._libProduit
+	}
+
+	get typeProduit():string{
+		return this._typeProduit
+	}
+
+	get condProduit():number{
+		return this._condProduit
+	}
+
+	get puProduit():number{
+		return this._puProduit
+	}
+
+	get qteProduit():number{
+		return this._qteProduit
+	}
+
+}
+
 class VueFactureEdit {
 	private _form 		: TFactureEditForm
+	private _unProduit: UnProduit
 	private _params 	: string[];		// paramètres reçus par le fichier HTML 
 										// tel que  params[0] :  mode affi, modif, suppr, ajout
-										// 			params[1] : id en mode affi, modif, suppr 
-	private _grille     : TTypEquiptsBySalle;   // tableau des équipements de la salle
+										// 			params[1] : id en mode affi, modif, supp
 
 	get form(): TFactureEditForm{ 
         return this._form
@@ -43,300 +167,45 @@ class VueFactureEdit {
 	get params(): string[]{ 
         return this._params	
     }
-	get grille(): TTypEquiptsBySalle { 
-        return this._grille	
-    }
 
-	init(form:TFactureEditForm):void {
-		this._form = form;
-		this._params = location.search.substring(1).split('&');
-		// params[0] :  mode affi, modif, suppr, ajout
-		// params[1] : id en mode affi, modif, suppr
 
-		this.form.divSalleEquiptEdit.hidden = true;
-
-		this.initMsgErreur();
-
-		let titre : string;
-		switch (this.params[0]) {
-			case 'suppr' : titre = "Suppression d'une facture"; 	break;
-			case 'ajout' : titre = "Nouvelle facture";			break;
-			case 'modif' : titre = "Modification d'une facture";	break;
-			default		 : titre = "Détail d'une facture";
-		}	
-		this.form.divTitre.textContent = titre;
-	
-		const lesFactures = new LesSalles;
-		const affi = this.params[0] === 'affi';
-		if (this.params[0] !== 'ajout')
-		{	// affi ou modif ou suppr
-			const salle = lesSalles.byNumSalle(this._params[1]);
-			this.form.edtNum.value 			= salle.numSalle;			
-			this.form.edtLib.value			= salle.libSalle;
-			this.form.edtEtage.value		= salle.etage;
-			this.form.edtCodeDept.value		= salle.codeDept;
-			this.form.edtNum.readOnly 		= true;
-			this.form.edtLib.readOnly 		= affi;
-			this.form.edtEtage.readOnly 	= affi;
-			this.form.edtCodeDept.readOnly  = affi;
-			this.erreur.edtNum.statut 		= "correct";
-			this.detailDepartement(salle.codeDept);
-		}
-		
-		this.affiEquipement();
-
-		if (this.params[0] === 'suppr') {	
-		// temporisation 1 seconde pour afficher les données de la salle avant demande de confirmation de la supression
-			setTimeout(() => {this.supprimer(this.params[1])}, 1000);
-		}
-		this.form.btnRetour.hidden  = !affi;
-		this.form.btnValider.hidden = affi;
-		this.form.btnAnnuler.hidden = affi;	
-		this.form.btnAjouterEquipt.hidden = affi;
-			
-		// définition des événements   
-		this.form.edtCodeDept.onchange 		= function():void { vueSalleEdit.detailDepartement(vueSalleEdit.form.edtCodeDept.value); }
-		this.form.btnRetour.onclick    		= function():void { vueSalleEdit.retourClick(); }  
-		this.form.btnAnnuler.onclick   		= function():void { vueSalleEdit.retourClick(); }
-		this.form.btnValider.onclick   		= function():void { vueSalleEdit.validerClick(); } 
-		this.form.btnAjouterEquipt.onclick 	= function():void { vueSalleEdit.ajouterEquiptClick(); } 
-		this.form.btnValiderEquipt.onclick 	= function():void { vueSalleEdit.validerEquiptClick(); } 
-		this.form.btnAnnulerEquipt.onclick 	= function():void { vueSalleEdit.annulerEquiptClick(); } 
-	}
-
-	detailDepartement(valeur : string):void {
-		const err = this.erreur.edtCodeDept
-		const lesDepts = new LesDepts;
-		const detail   = this.form.lblDetailDept;
-		detail.textContent = "";		
-		err.statut = "correct";
-		const chaine : string = valeur.trim();
-		if (chaine.length > 0) {
-			const dept : UnDept = lesDepts.byCodeDept(chaine);
-			if (dept.codeDept !== "") {	// département trouvé 
-				detail.textContent 
-				= dept.nomDept +"\r\n" +"Responsable : " +dept.respDept; 
-			}
-			else { 
-				err.statut = 'inconnu';
-				detail.textContent = err.msg.inconnu;	
-			}
-		}
-		else err.statut = 'vide';		
-	}
-
-	affiEquipement():void {
-		const lesTypEquiptsBySalle = new LesTypEquiptsBySalle(); 
-		this._grille = lesTypEquiptsBySalle.byNumSalle(this.params[1]);
-		this.affiGrilleEquipement();
-	}
-
-	affiGrilleEquipement():void {
-		while (this.form.tableEquipement.rows.length > 1) {
-			this.form.tableEquipement.rows[1].remove();
-		}
-		let   total = 0;	
-		for (let id in this._grille) {
-			const unTypEquiptBySalle : UnTypEquiptBySalle = this.grille[id];
-			const tr = this.form.tableEquipement.insertRow();
-			tr.insertCell().textContent = unTypEquiptBySalle.unTypEquipt.libEquipt;
-			tr.insertCell().textContent = unTypEquiptBySalle.qte;
-			const affi = this.params[0] === 'affi';
-			if (!affi) {
-				let balisea : HTMLAnchorElement; // déclaration balise <a>
-				// création balise <a> pour appel modification équipement dans salle
-				balisea = document.createElement("a")
-				balisea.classList.add('img_modification')
-				balisea.onclick = function():void { vueSalleEdit.modifierEquiptClick(id); }
-				tr.insertCell().appendChild(balisea)
-				// création balise <a> pour appel suppression équipement dans salle
-				balisea = document.createElement("a")
-				balisea.classList.add('img_corbeille')
-				balisea.onclick = function():void { vueSalleEdit.supprimerEquiptClick(id); }
-				tr.insertCell().appendChild(balisea)
-			}
-			total += Number(unTypEquiptBySalle.qte);
-		}
-		this.form.lblTotal.textContent = total.toString();		
-	}
-
-	supprimer(numSalle : string):void	{
-		if (confirm("Confirmez-vous la suppression de la facture "+numSalle)) {
-			let lesTypEquiptsBySalle : LesTypEquiptsBySalle = new LesTypEquiptsBySalle();	
-			lesTypEquiptsBySalle.delete(numSalle);			// suppression dans la base des equipements de la salle
-	
-			const lesSalles = new LesSalles;					
-			lesSalles.delete(numSalle);						// suppression dans la base de la salle	
-		}
-		this.retourClick();	
-	}
-
-	verifNum(valeur : string):void {
-		const lesSalles	= new LesSalles;
-		const err = this.erreur.edtNum
-		err.statut = "correct";
-		const chaine : string = valeur.trim();
-		if (chaine.length > 0) {	
-			if (! chaine.match(/^([a-zA-Z0-9]+)$/))	{
-			// expression régulière qui teste si la chaîne ne contient rien d'autre que des caractères alphabétiques minuscules ou majuscules et des chiffres	
-				this.erreur.edtNum.statut = 'inconnu';
-			}
-			else if ( (this.params[0] === 'ajout')  &&  (lesSalles.idExiste(chaine)) ) { 
-				this.erreur.edtNum.statut = 'doublon';
-			}
-		}
-		else err.statut = 'vide';
-	}	
-
-	verifEtage(valeur : string):void {
-		const err = this.erreur.edtEtage
-		err.statut = "correct";
-		const chaine : string = valeur.trim();
-		if (chaine.length === 0) {		
-			err.statut = 'vide';
+	init(form:TFactureEditForm) {
+		this._form=form
+		alert("1")
+		this.form.listeContenue.style.display = "none";
+		this.form.edtContenueQte.style.display = "none";
+		this._unProduit= new UnProduit(27,"Evian","eau en bouteille",0.5,8,10)
+		this.affichageListe();
+		this.ajouterProduit(28,"Christaline","bouteille en plastique",0.75,5,1 )
+		this.form.btnAjouterFacture.onclick = function():void{
+			vueFactureEdit.afficherFactureEdit();
 		}
 	}
-	
-	traiteErreur(uneErreur:TErreur, zone : HTMLElement):boolean {
-		let correct = true;
-		zone.textContent ="";
-		if (uneErreur.statut !== "correct") { // non correct ==> erreur 
-			if (uneErreur.msg[uneErreur.statut] !== '') {  // erreur 
-				zone.textContent = uneErreur.msg[uneErreur.statut];
-				correct = false;
-			}
-		}
-		return correct;
-	}
-
-	validerClick():void {
-		let correct = true;
-		this.verifNum(this._form.edtNum.value);
-		this.verifEtage(this._form.edtEtage.value);
-
-		if (JSON.stringify(this.grille) === '{}' ) {	this._erreur.equipt.statut	= 'vide'	}
-		else this._erreur.equipt.statut	= "correct";
-
-		correct = this.traiteErreur(this._erreur.edtNum, this.form.lblNumErreur) && correct;
-		correct = this.traiteErreur(this._erreur.edtEtage, this.form.lblEtageErreur) && correct;
-		correct = this.traiteErreur(this._erreur.edtCodeDept, this.form.lblDeptErreur) && correct;
-		correct = this.traiteErreur(this._erreur.equipt, this.form.lblEquiptErreur) && correct;
-
-		const lesSalles	= new LesSalles;
-		const salle		= new UneSalle;
-		if (correct) {
-			salle.numSalle	= this.form.edtNum.value; 
-			salle.libSalle	= this.form.edtLib.value;	
-			salle.etage		= this.form.edtEtage.value;	
-			salle.codeDept	= this.form.edtCodeDept.value;		
-			if (this._params[0] === 'ajout') {		
-				lesSalles.insert(salle);
-			}
-			else {
-				lesSalles.update(salle);
-			}
-	
-			const lesTypEquiptsBySalle : LesTypEquiptsBySalle = new LesTypEquiptsBySalle;
-			lesTypEquiptsBySalle.delete(salle.numSalle);
-			lesTypEquiptsBySalle.insert(salle.numSalle, this.grille);
-			
-			this.retourClick();
-		}
-	}
-
-	retourClick():void {
-		location.href = "salle_liste.html";		
-	}	
-
-	// gestion des équipements de la salle
-	ajouterEquiptClick():void {
-		this.afficherEquitpEdit();
-
-		// réinitialiser la liste des équipements à choisir
-		this.form.listeEquipt.length = 0;
-		const lesTypEquipts = new LesTypEquipts;
-		const data 	= lesTypEquipts.all();
-		const idEquipts = [];		
-		for (let i in this._grille) {
-			idEquipts.push(this._grille[i].unTypEquipt.idEquipt); 	
-		}
-		for (let i in data) {
-			const id = data[i].idEquipt;
-			if (idEquipts.indexOf(id) === -1) { // pas dans la liste des équipements déjà dans la salle
-				this._form.listeEquipt.options.add(new Option(data[i].libEquipt, id));	// text, value
-			}
-		}
-	}
-	modifierEquiptClick(id : string):void {
-		this.afficherEquitpEdit();		
-		const lesTypEquipts = new LesTypEquipts();
-		const unTypEquipt : UnTypEquipt = lesTypEquipts.byIdEquipt(id) ;
-		this.form.listeEquipt.length = 0;
-		this.form.listeEquipt.options.add(new Option(unTypEquipt.libEquipt, id));	// text, value = 0;
-		this.form.listeEquipt.selectedIndex = 0;
-		this.form.edtQte.value	= this._grille[id].qte;	
-	}
-	supprimerEquiptClick(id : string):void {
-		if (confirm("Confirmez-vous le du produit de cet facture ")) {
-			delete(this._grille[id]);			
-			this.affiGrilleEquipement();
-		}
-	}
-	afficherEquitpEdit():void {
-		this.form.divSalleEquiptEdit.hidden = false;
-		this.form.divDetail.style.pointerEvents = 'none';
-		this.form.divSalleEquiptEdit.style.pointerEvents = 'auto';
-		this.form.btnAjouterEquipt.hidden = true;
-		this.form.btnAnnuler.hidden = true;
-		this.form.btnValider.hidden = true;		
-	}	
-	cacherEquitpEdit():void {
-		this.form.divSalleEquiptEdit.hidden = true;
-		this.form.divDetail.style.pointerEvents = 'auto';
-		this.form.btnAjouterEquipt.hidden = false;
+	afficherFactureEdit():void {
+		this.form.listeContenue.style.display = "block";
+		this.form.edtContenueQte.style.display = "block";
+		this.form.btnAjouterFacture.hidden = false;
 		this.form.btnAnnuler.hidden = false;
-		this.form.btnValider.hidden = false;		
-	}	
-	verifListeEquipt():void {
-		const err = this._erreur.listeEquipt
-		err.statut = "correct";
-		const cible  = this._form.listeEquipt;
-		if (cible.value === "")	{
-			err.statut = 'vide'
-		}
+		this.form.btnValider.hidden = false;
 	}
-	verifQte():void {
-		const err = this._erreur.edtQte
-		err.statut = "correct";
-		const valeur : string = this._form.edtQte.value;
-		if ( ! ( (Number.isInteger(Number(valeur))) && (Number(valeur)>0) ) ) {
-			err.statut = 'vide'
-		}
-	}
-	validerEquiptClick():void {
-		let correct = true;
-		this.verifListeEquipt();
-		this.verifQte();
 
-		correct = this.traiteErreur(this._erreur.listeEquipt, this.form.lblSelectEquiptErreur) && correct;
-		correct = this.traiteErreur(this._erreur.edtQte, this.form.lblQteErreur) && correct;
+	affichageListe():void{
+		const tr = this.form.tableContenue.insertRow();
+		let balisea : HTMLAnchorElement; // dÃ©claration balise <a>
+		// crÃ©ation balise <a> pour appel page visualisation du dÃ©tail de la salle
+		balisea = document.createElement("a")
 
-		if (correct) {
-			const lesTypEquipts = new LesTypEquipts;
-			// ajout visuel de la ligne dans la grille tabulaire de la liste des équipements d'une salle
-			const unTypEquipt 		: UnTypEquipt	= lesTypEquipts.byIdEquipt(this._form.listeEquipt.value); 
-			const unTypEquiptBySalle: UnTypEquiptBySalle 	
-					= new UnTypEquiptBySalle(unTypEquipt, this._form.edtQte.value);
-			this._grille[unTypEquipt.idEquipt] 	= unTypEquiptBySalle;
-			this.affiGrilleEquipement();
-			this.annulerEquiptClick();
-		}
+		tr.insertCell().textContent = this._unProduit.codeProduit.toString();
+		tr.insertCell().textContent = this._unProduit.libProduit
+		tr.insertCell().textContent = this._unProduit.typeProduit;
+		tr.insertCell().textContent = this._unProduit.condProduit.toString();
+		tr.insertCell().textContent = this._unProduit.puProduit.toString();
+		tr.insertCell().textContent = this._unProduit.qteProduit.toString();
+		tr.insertCell().textContent = this._unProduit.montant().toString();
 	}
-	annulerEquiptClick():void {
-		this.cacherEquitpEdit();		
-	}
+
+		
 }
-
 let vueFactureEdit = new VueFactureEdit;
-
-export { vueFactureEdit }
+export { vueFactureEdit };
+//# sourceMappingURL=class_salle_edit.js.map
