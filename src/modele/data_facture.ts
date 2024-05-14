@@ -73,14 +73,15 @@ class UneFacture {
         this._livraison = livraison
     }
 
-	toArray():APIsql.TtabAsso
-	{
-	// renvoie l’objet sous la forme d’un tableau associatif 
-		// pour un affichage dans une ligne d’un tableau HTML
-		const tableau : APIsql.TtabAsso = {'numero': this._numero, 'date': this._date,
-            'client': this._client, 'nomClient': this._nomClient};
-		return tableau;
-	}
+    toArray(): APIsql.TtabAsso {
+        // renvoie l’objet sous la forme d’un tableau associatif 
+        // pour un affichage dans une ligne d’un tableau HTML
+        const tableau: APIsql.TtabAsso = {
+            'numero': this._numero, 'date': this._date,
+            'client': this._client, 'nomClient': this._nomClient
+        };
+        return tableau;
+    }
 
 }
 
@@ -93,8 +94,8 @@ class LesFactures {
 
     }
 
-private prepare(where: string = ""): string { // La valeur par défaut de "where" est une chaîne vide
-    let sql = `SELECT
+    private prepare(where: string = ""): string { // La valeur par défaut de "where" est une chaîne vide
+        let sql = `SELECT
         f.num_fact, 
         f.date_fact, 
         f.id_cli,
@@ -104,19 +105,19 @@ private prepare(where: string = ""): string { // La valeur par défaut de "where
         f.id_forfait
     FROM facture f`;
 
-    if (where !== "") {
-        sql += " WHERE " + where;
-    }
+        if (where !== "") {
+            sql += " WHERE " + where;
+        }
 
-    sql += ` GROUP BY 
+        sql += ` GROUP BY 
         f.num_fact, 
         f.date_fact, 
         f.id_cli, 
         f.taux_remise_fact, 
         f.id_forfait`;
 
-    return sql;
-}
+        return sql;
+    }
 
 
     private load(result: APIsql.TdataSet): TFactures {
@@ -132,25 +133,24 @@ private prepare(where: string = ""): string { // La valeur par défaut de "where
     }
 
 
-	all() : TFactures {	// renvoie le tableau d’objets contenant toutes les salles
-		return this.load(APIsql.sqlWeb.SQLloadData(this.prepare(""),[]));
-	}
+    all(): TFactures {	// renvoie le tableau d’objets contenant toutes les salles
+        return this.load(APIsql.sqlWeb.SQLloadData(this.prepare(""), []));
+    }
 
-	toArray(salles : TFactures) : APIsql.TdataSet {	// renvoie le tableau d’objets sous la forme 
-	//	d’un tableau de tableaux associatifs pour un affichage dans un tableau HTML
-		let T:APIsql.TdataSet = [];
-		for (let id in salles) {
-			T.push(salles[id].toArray());
-		}	 
-		return T;			 
-	}
+    toArray(salles: TFactures): APIsql.TdataSet {	// renvoie le tableau d’objets sous la forme 
+        //	d’un tableau de tableaux associatifs pour un affichage dans un tableau HTML
+        let T: APIsql.TdataSet = [];
+        for (let id in salles) {
+            T.push(salles[id].toArray());
+        }
+        return T;
+    }
 
 }
 
 
-let lesFactures = new LesFactures;
-alert(lesFactures.all().toString())
 export { LesFactures };
-export { UneFacture};
+export { UneFacture };
+export { TFactures };
 
 
