@@ -1,46 +1,110 @@
+type TFactureListeForm = {
+    divTitre: HTMLElement;
+    btnAjouter: HTMLInputElement;
+    tableFacture: HTMLTableElement;
+}
 
 class DonneListe {
     private _numero: number;
     private _date: Date;
     private _client: number;
-    private _remise: boolean;
+    private _prix: number;
+    private _remise: number;
     private _livraison: number;
 
-    constructor(numero: number, date: Date, client: number, remise: boolean, livraison: number) {
+    constructor(numero: number, date: Date, client: number,prix:number, remise: number, livraison: number) {
         this._numero = numero;
         this._date = date;
         this._client = client;
+        this._prix = prix;
         this._remise = remise;
         this._livraison = livraison;
     }
+
+    avecRemise():number{
+        return this._prix-this._prix*this._remise
+    }
+
+    get numero():number{
+        return this._numero
+    }
+
+    get date():Date{
+        return this._date
+    }
+
+    get client():number{
+        return this._client
+    }
+    
+    get prix():number{
+        return this._prix
+    }
+
+    get remise():number{
+        return this._remise
+    }
+
+    get livraison():number{
+        return this._livraison
+    }
 }
-
-// Déclaration d'une variable de type Date initialisée à la date et heure actuelles
-
-
-tabDonne : TDonneListe = {15,let date: Date = new Date(),83,0,101};
 
 class VueFactureListe {
     private _form : TFactureListeForm;
+    private _donneListe: DonneListe;
 
-    constructor(){}
+    constructor(){
+    }
 
-    get form() : TFactureListeForm { return this._form }
+    get form() : TFactureListeForm { 
+        return this._form 
+    }
+
+    get donneListe():DonneListe{
+        return this._donneListe
+    }
 
     init(form: TFactureListeForm) : void {
         this._form=form
+        const dateString: Date = new Date('2024-05-13');
+        this._donneListe= new DonneListe(15,dateString ,46,150,0.5,86)
+        this.affichageListe();
+        this.form.btnAjouter.onclick = function(): void {
+            vueFactureListe.ajouterFactureClick();
+        }
     }
     detailFactureClick(code : string,  noLigne = -1):void {
-        location.href = "salle_edit.html?affi&" +encodeURIComponent(code);
+        location.href = "facture_edit.html?affi&" +encodeURIComponent(code);
     }
     modifierFactureClick(code : string):void {
-        location.href = "salle_edit.html?modif&" +encodeURIComponent(code);
+        location.href = "facture_edit.html?modif&" +encodeURIComponent(code);
     }
     supprimerFactureClick(code : string):void {
-        location.href = "salle_edit.html?suppr&" +encodeURIComponent(code);
+        location.href = "facture_edit.html?suppr&" +encodeURIComponent(code);
     }
     ajouterFactureClick():void {
-        location.href = "salle_edit.html?ajout";
+        alert("test2")
+        location.href = "facture_edit.html?ajout";
+    }
+
+    affichageListe():void{
+            alert("1")
+        	const tr = this.form.tableFacture.insertRow();
+            let balisea : HTMLAnchorElement; // dÃ©claration balise <a>
+			// crÃ©ation balise <a> pour appel page visualisation du dÃ©tail de la salle
+			balisea = document.createElement("a")
+			balisea.classList.add('img_visu')
+            alert("2")
+			tr.insertCell().appendChild(balisea)
+
+			tr.insertCell().textContent = this.donneListe.numero.toString();
+			tr.insertCell().textContent = this.donneListe.date.toString();
+			tr.insertCell().textContent = this.donneListe.client.toString();
+            tr.insertCell().textContent = this.donneListe.prix.toString();
+			tr.insertCell().textContent = this.donneListe.avecRemise().toString();
+            tr.insertCell().textContent = this.donneListe.livraison.toString();
+			
     }
 
 }
