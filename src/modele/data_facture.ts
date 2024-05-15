@@ -78,7 +78,7 @@ class UneFacture {
         // pour un affichage dans une ligne d’un tableau HTML
         const tableau: APIsql.TtabAsso = {
             'numero': this._numero, 'date': this._date,
-            'client': this._client, 'nomClient': this._nomClient
+            'client': this._client, 'nomClient': this._nomClient, 'prix': this._prix, 'remise': this._remise
         };
         return tableau;
     }
@@ -100,7 +100,7 @@ class LesFactures {
         f.date_fact, 
         f.id_cli,
         (SELECT nom_cli FROM client c WHERE c.id_cli = f.id_cli) as nom_cli, 
-        (SELECT SUM(l.qte_prod * p.tarif_ht) FROM ligne l, produit p WHERE l.num_fact = f.num_fact AND l.code_prod = p.code_prod) as prix_total,
+        (SELECT SUM(l.qte_prod * p.tarif_ht) FROM ligne l, produit p WHERE l.num_fact = f.num_fact AND l.code_prod = p.code_prod) as prix,
         f.taux_remise_fact, 
         f.id_forfait
     FROM facture f`;
