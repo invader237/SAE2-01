@@ -27,7 +27,6 @@ class VueFactureListe {
 
         const lesFactures = new LesFactures;
         const data: TFactures = lesFactures.all();
-
         this.affichageListe(data);
         this.form.btnAjouter.onclick = function(): void {
             vueFactureListe.ajouterFactureClick();
@@ -44,7 +43,6 @@ class VueFactureListe {
         location.href = "facture_edit.html?suppr&" + encodeURIComponent(code);
     }
     ajouterFactureClick(): void {
-        alert("test2")
         location.href = "facture_edit.html?ajout";
     }
 
@@ -52,6 +50,7 @@ class VueFactureListe {
 
         for (let num in data) {
             const uneFacture: UneFacture = data[num];
+
             const tr = this.form.tableFacture.insertRow();
             let balisea: HTMLAnchorElement; // dÃ©claration balise <a>
             // crÃ©ation balise <a> pour appel page visualisation du dÃ©tail de la salle
