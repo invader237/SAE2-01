@@ -12,7 +12,7 @@ vueFactureEdit.init( {
                     ,btnRetour		:document.querySelector('[id=btn_facture_retour]')
                     ,btnValider		:document.querySelector('[id=btn_facture_valider]')
                     ,btnAnnuler		:document.querySelector('[id=btn_facture_annuler]')	
-                    ,lblDetailDept	:document.querySelector('[id=lbl_facture_detail_dept]')
+                    ,lblDetailClient:document.querySelector('[id=lbl_facture_detail_client]')
                     ,lblNumErreur	:document.querySelector('[id=lbl_erreur_num]')
                     ,lblEtageErreur	:document.querySelector('[id=lbl_erreur_etage]')
                     ,lblDeptErreur	:document.querySelector('[id=lbl_erreur_dept]')
