@@ -20,7 +20,7 @@ class UneFacture {
     }
 
     avecRemise(): string {
-        return (parseInt(this._prix, 10) - parseInt(this._prix, 10) * parseInt(this._remise, 10)).toString();
+        return (parseInt(this._prix, 10) - parseInt(this._prix, 10) * (parseInt(this._remise, 10) / 100)).toString();
     }
 
     get numero(): string {
@@ -78,7 +78,8 @@ class UneFacture {
         // pour un affichage dans une ligne d’un tableau HTML
         const tableau: APIsql.TtabAsso = {
             'numero': this._numero, 'date': this._date,
-            'client': this._client, 'nomClient': this._nomClient, 'prix': this._prix, 'remise': this._remise
+            'client': this._client, 'nomClient': this._nomClient, 
+            'prix': this._prix, 'remise': this._remise, 'livraison': this._livraison
         };
         return tableau;
     }
@@ -102,7 +103,7 @@ class LesFactures {
         (SELECT nom_cli FROM client c WHERE c.id_cli = f.id_cli) as nom_cli, 
         (SELECT SUM(l.qte_prod * p.tarif_ht) FROM ligne l, produit p WHERE l.num_fact = f.num_fact AND l.code_prod = p.code_prod) as prix,
         f.taux_remise_fact, 
-        f.id_forfait
+        f.id_forfait as livraison
     FROM facture f`;
 
         if (where !== "") {
