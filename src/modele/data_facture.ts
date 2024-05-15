@@ -138,11 +138,11 @@ class LesFactures {
         return this.load(APIsql.sqlWeb.SQLloadData(this.prepare(""), []));
     }
 
-    toArray(salles: TFactures): APIsql.TdataSet {	// renvoie le tableau d’objets sous la forme 
+    toArray(factures: TFactures): APIsql.TdataSet {	// renvoie le tableau d’objets sous la forme 
         //	d’un tableau de tableaux associatifs pour un affichage dans un tableau HTML
         let T: APIsql.TdataSet = [];
-        for (let id in salles) {
-            T.push(salles[id].toArray());
+        for (let id in factures) {
+            T.push(factures[id].toArray());
         }
         return T;
     }
