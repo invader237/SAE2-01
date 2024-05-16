@@ -90,7 +90,8 @@ class DesClients {
             sql += " WHERE " + where;
         }
 
-        sql += `FROM 
+        sql += `
+            FROM 
             client;`;
 
         return sql;
