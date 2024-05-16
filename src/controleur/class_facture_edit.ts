@@ -1,7 +1,8 @@
-import { UneFacture } from "../modele/data_facture"
+import { UneFacture, LesFactures, TFactures } from "../modele/data_facture"
 import { UnClient, DesClients, TClients } from "../modele/data_client"
-import { UnProduit } from "../modele/data_produit"
-import { UneLivraison } from "../modele/data_livraison"
+import { UnProduit, DesProduits, TProduits } from "../modele/data_produit"
+import { UnProduitDansFacture, LesProduitsDansFacture, TProduitDansFacture } from "../modele/data_produit"
+import { UneLivraison, DesLivraisons, TLivraisons } from "../modele/data_livraison"
 
 
 
@@ -46,11 +47,10 @@ type TErreur = {
 
 class VueFactureEdit {
     private _form: TFactureEditForm
-    private _unProduit: UnProduit
-    private _unClient: UnClient
-    private _uneFacture: UneFacture
-    private _uneLivraison: UneLivraison
     private _params: string[];
+    private _dataProduit: TProduits;
+    private _dataFacture: TFactures;
+    private _dataClient: TClients;
     private _erreur: { [key: string]: TErreur }
 
     get form(): TFactureEditForm {
@@ -63,60 +63,25 @@ class VueFactureEdit {
         return this._erreur
     }
 
-    initMsgErreur(): void {
-        this._erreur = {
-            edtNum: { statut: 'vide', msg: { 
-                correct: "", 
-                vide: "Le numéro d'identifications doit être renseigné.", 
-                inconnu: "Le numéro d'identification ne peut contenir que des chiffres.", 
-                doublon: "Le numéro d'identification est déjà attribué." } 
-            }
-            , edtEtage: { statut: 'vide', msg: { 
-                correct: "", 
-                vide: "La date doit être renseigné.", 
-                inconnu: "", 
-                doublon: "" } 
-            }
-            , edtCodeClient: { statut: 'vide', msg: { 
-                correct: "", 
-                vide: "Le numéro du client doit être renseigné.", 
-                inconnu: "Client inconnu.", doublon: "" } 
-            }
-            , equipt: { statut: 'vide', msg: { 
-                correct: "", 
-                vide: "La facture doit contenir au moins un produit.", 
-                inconnu: "", 
-                doublon: "" } 
-            }
-            , listeEquipt: { statut: 'vide', msg: { 
-                correct: "", 
-                vide: "Aucun produit choisi", 
-                inconnu: "", 
-                doublon: "" } 
-            }
-            , edtQte: { statut: 'vide', msg: { 
-                correct: "", 
-                vide: "La quantité doit être un nombre entier supérieur à 0", 
-                inconnu: "", 
-                doublon: "" } 
-            }
-        }
-    }
-
     init(form: TFactureEditForm) {
         this._form = form
 
         this.form.listeContenue.style.display = "none";
         this.form.edtContenueQte.style.display = "none";
 
-        this._uneFacture = new UneFacture("1", "2024-05-23", "1", "BOZZO", "75", "10", "30")
-        this._unProduit = new UnProduit("27", "Evian", "eau en bouteille", "0.5", "8", "10")
-        this._unClient = new UnClient("1", "M.", "BOZZO", "Raoul", "bozzo.raoul@gmail.com", "24 rue du cirque", "57000", "Metz", "20")
-        this._uneLivraison = new UneLivraison("STD", "livraison standard", "mt_forfait")
+        const lesFactures = new LesFactures();
+        this._dataFacture = lesFactures.all();
 
-        this.affichageListe();
-        this.selectLivraison();
-        this.initMsgErreur();
+        const desProduits = new DesProduits();
+        this._dataProduit = desProduits.all();
+
+        const desClients = new DesClients();
+        this._dataClient = desClients.all();
+
+
+        //this.affichageListe();
+        //this.selectLivraison();
+        //this.initMsgErreur();
 
         this.form.edtClient.onchange = function(): void {
             vueFactureEdit.detailClient()
@@ -127,6 +92,7 @@ class VueFactureEdit {
         this.form.btnRetour.onclick = function(): void {
             vueFactureEdit.retourClick();
         }
+        /*
         const affi = this.params[0] === 'affi';
         if (this.params[0] !== 'ajout') {	// affi ou modif ou suppr
             this.form.edtNum.value = this._uneFacture.numero;
@@ -139,9 +105,63 @@ class VueFactureEdit {
             this.erreur.edtNum.statut = "correct";
             //this.detailClient();
         }
+        */
     }
+
+    initMsgErreur(): void {
+        this._erreur = {
+            edtNum: {
+                statut: 'vide', msg: {
+                    correct: "",
+                    vide: "Le numéro d'identifications doit être renseigné.",
+                    inconnu: "Le numéro d'identification ne peut contenir que des chiffres.",
+                    doublon: "Le numéro d'identification est déjà attribué."
+                }
+            }
+            , edtEtage: {
+                statut: 'vide', msg: {
+                    correct: "",
+                    vide: "La date doit être renseigné.",
+                    inconnu: "",
+                    doublon: ""
+                }
+            }
+            , edtCodeClient: {
+                statut: 'vide', msg: {
+                    correct: "",
+                    vide: "Le numéro du client doit être renseigné.",
+                    inconnu: "Client inconnu.", doublon: ""
+                }
+            }
+            , equipt: {
+                statut: 'vide', msg: {
+                    correct: "",
+                    vide: "La facture doit contenir au moins un produit.",
+                    inconnu: "",
+                    doublon: ""
+                }
+            }
+            , listeEquipt: {
+                statut: 'vide', msg: {
+                    correct: "",
+                    vide: "Aucun produit choisi",
+                    inconnu: "",
+                    doublon: ""
+                }
+            }
+            , edtQte: {
+                statut: 'vide', msg: {
+                    correct: "",
+                    vide: "La quantité doit être un nombre entier supérieur à 0",
+                    inconnu: "",
+                    doublon: ""
+                }
+            }
+        }
+    }
+
     afficherFactureEdit(): void {
-        this.affichageProduit()
+        this.affichageProduit();
         this.form.listeContenue.style.display = "block";
         this.form.edtContenueQte.style.display = "block";
         this.form.btnAjouterFacture.hidden = true;
@@ -150,6 +170,7 @@ class VueFactureEdit {
     }
 
     affichageListe(): void {
+        //a terminer 
         const tr = this.form.tableContenue.insertRow();
         //a supp
         let balisea: HTMLAnchorElement; // dÃ©claration balise <a>
@@ -181,18 +202,19 @@ class VueFactureEdit {
     }
 
     affichageProduit(): void {
-        //const option = this.form.tableContenue.options();
-        //option.insertCell().textContent = this._unProduit.libProduit;
-        this._form.listeContenue.options.add(new Option(this._unProduit.nom, this._unProduit.code.toString()));
+        const dataProduit = this._dataProduit;
+        for (let num in dataProduit) {
+            const unProduit: UnProduit = dataProduit[num];
+            this._form.listeContenue.options.add(new Option(unProduit.nom, unProduit.code));
+        }
     }
 
     detailClient(): void {
         // a réecrire/améliorer
-        const desClient = new DesClients();
-        const data_client: TClients = desClient.all();
+        const dataClient = this._dataClient;
         const detail = this.form.lblDetailClient;
         const valeur = vueFactureEdit.form.edtClient.value
-        const detailClient = data_client[valeur];
+        const detailClient = dataClient[valeur];
         (detailClient["nom"])
         if (detailClient["nom"] !== "") {	// département trouvé 
             detail.textContent
