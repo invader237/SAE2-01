@@ -205,7 +205,7 @@ class VueFactureEdit {
 		this.affichageProduit()
 		this.form.listeContenue.style.display = "block";
 		this.form.edtContenueQte.style.display = "block";
-		this.form.btnAjouterFacture.hidden = false;
+		this.form.btnAjouterFacture.hidden = true;
 		this.form.btnAnnuler.hidden = false;
 		this.form.btnValider.hidden = false;
 	}
