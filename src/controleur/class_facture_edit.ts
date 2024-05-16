@@ -1,5 +1,5 @@
 import { UneFacture } from "../modele/data_facture"
-import { UnClient } from "../modele/data_client"
+import { UnClient,DesClients,TClients } from "../modele/data_client"
 import { UnProduit } from "../modele/data_produit"
 
 
@@ -48,9 +48,8 @@ class VueFactureEdit {
 	private _unProduit: UnProduit
 	private _unClient: UnClient
 	private _uneFacture: UneFacture
-	private _params 	: string[];		// paramètres reçus par le fichier HTML 
-										// tel que  params[0] :  mode affi, modif, suppr, ajout
-										// 			params[1] : id en mode affi, modif, supp
+	private _params 	: string[];		
+	private _erreur	: {	[key:string] : TErreur }							
 
 	get form(): TFactureEditForm{ 
         return this._form
@@ -58,14 +57,11 @@ class VueFactureEdit {
 	get params(): string[]{ 
         return this._params	
     }
-	private _erreur		: {	// tableau contenant les messages d'erreur pour chaque type d'erreur pour chaque zone de saisie à vérifier
-		[key:string] : TErreur 
+	get erreur()  :{[key:string]:TErreur}	{ 
+		return this._erreur	
 	}
-	get erreur()  :{[key:string]:TErreur}	{ return this._erreur	}
 
-	initMsgErreur():void { // les erreurs "champ vide", "valeur inconnue", "doublon" sont les trois principales erreurs dans un formulaire
-		// pour chaque champ à contrôler (événement onChange), création des 3 messages d'erreur + message pour correct
-		// avec chaîne vide si pas d'erreur générée pour un type d'erreur potentielle
+	initMsgErreur():void {
 			this._erreur = { edtNum		: {statut :'vide', msg:{correct:"", vide:"Le numéro d'identifications doit être renseigné."		 ,inconnu:"Le numéro d'identification ne peut contenir que des chiffres."						,doublon:"Le numéro d'identification est déjà attribué."} }
 							,edtEtage	: {statut :'vide', msg:{correct:"", vide:"La date doit être renseigné."					 ,inconnu:""						,doublon:""} }
 							,edtCodeClient: {statut :'vide', msg:{correct:"", vide:"Le numéro du client doit être renseigné."			 ,inconnu:"Client inconnu."	,doublon:""} }
@@ -76,13 +72,21 @@ class VueFactureEdit {
 
 	init(form:TFactureEditForm) {
 		this._form=form
+		
 		this.form.listeContenue.style.display = "none";
 		this.form.edtContenueQte.style.display = "none";
+		
 		this._uneFacture=new UneFacture("1", "2024-05-23", "1", "BOZZO","75", "10", "30")
 		this._unProduit= new UnProduit("27","Evian","eau en bouteille","0.5","8","10")
 		this._unClient = new UnClient("1","M.","BOZZO","Raoul","bozzo.raoul@gmail.com", "24 rue du cirque","57000","Metz","20")
+		
+
 		this.affichageListe();
 		this.initMsgErreur();
+
+		this.form.edtClient.onchange = function():void{
+			vueFactureEdit.detailClient()
+		}
 		this.form.btnAjouterFacture.onclick = function():void{
 			vueFactureEdit.afficherFactureEdit();
 		}
@@ -148,25 +152,18 @@ class VueFactureEdit {
 		this._form.listeContenue.options.add(new Option( this._unProduit.nom, this._unProduit.code.toString()));
 	}
 
-	/*detailClient(valeur : string):void {
-		const err = this.erreur.edtCodeClient
-		const detail   = this.form.lblDetailClient;
-		detail.textContent = "";		
-		err.statut = "correct";
-		const chaine : string = valeur.trim();
-		if (chaine.length > 0) {
-			const client : UnClient = DesClient.byCodeDept(chaine); 
-			if (this._unClient.id !== "") {	// client trouvé 
-				detail.textContent 
-				= this._unClient +"\r\n" +this._unClient.civ+this._unClient.nom+this._unClient.prenom+this._unClient.adr+this._unClient.cp+this._unClient.commune+this._unClient.remiseMax; 
-			}
-			else { 
-				err.statut = 'inconnu';
-				detail.textContent = err.msg.inconnu;	
-			}
+	detailClient():void {
+		const desClient = new DesClients();
+		const data_client :TClients = desClient.all();
+		const detail = this.form.lblDetailClient;
+		const valeur = vueFactureEdit.form.edtClient.value 
+		const detailClient = data_client[valeur];
+		(detailClient["nom"])
+		if (detailClient["nom"] !== "") {	// département trouvé 
+			detail.textContent 
+			= detailClient["civ"] +" "+ detailClient["nom"] +" "+ detailClient["prenom"]+"\r\n" + detailClient["adr"] + " - " + detailClient["cp"]+" "+ detailClient["commune"]+"\r\n" + detailClient["mel"]+ "\r\n" +"taux de remise maximum accordé : "+ detailClient["remiseMax"]+"%"; 
 		}
-		else err.statut = 'vide';		
-	}*/
+	}
 	
 	retourClick():void {
 		location.href = "salle_liste.html";		
