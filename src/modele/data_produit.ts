@@ -81,7 +81,7 @@ class UnProduit {
     }
 }
 
-type TProduits = { [key: string]: UnProduit };		// tableau d’objets UneFacture
+type TProduits = { [key: string]: UnProduit };		// tableau d’objets UnProduit
 
 class DesProduits {
 
@@ -135,6 +135,23 @@ class DesProduits {
         }
         return T;
     }
+
+    ajoutAFacture(numFacture: string, produit: UnProduit): boolean {
+        let sql = "INSERT INTO ligne(num_fact, code_prod, qte_prod) VALUES(?, ?, ?)";
+        return APIsql.sqlWeb.SQLexec(sql, [numFacture, produit.code, produit.qte]);
+    }
+
+    modifierDansFacture(numFacture: string, produit: UnProduit): boolean {
+        let sql = "UPDATE ligne SET code_prod = ?, qte_prod = ?";
+        sql += " WHERE num_facture = ?";
+        return APIsql.sqlWeb.SQLexec(sql, [produit.code, produit.qte, numFacture]);
+    }
+
+    suppDansFacture(numFacture: string, produit: UnProduit): boolean {
+        let sql = "DELETE FROM ligne WHERE num_fact = ? AND code_prod = ?";
+        return APIsql.sqlWeb.SQLexec(sql, [numFacture, produit.code]);
+    }
+
 }
 
 export { UnProduit };
