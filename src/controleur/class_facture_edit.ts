@@ -145,10 +145,10 @@ class VueFactureEdit {
 	affichageProduit(): void {
 		//const option = this.form.tableContenue.options();
 		//option.insertCell().textContent = this._unProduit.libProduit;
-		this._form.listeContenue.options.add(new Option( this._unProduit.libProduit, this._unProduit.codeProduit.toString()));
+		this._form.listeContenue.options.add(new Option( this._unProduit.nom, this._unProduit.code.toString()));
 	}
 
-	detailClient(valeur : string):void {
+	/*detailClient(valeur : string):void {
 		const err = this.erreur.edtCodeClient
 		const detail   = this.form.lblDetailClient;
 		detail.textContent = "";		
@@ -166,7 +166,7 @@ class VueFactureEdit {
 			}
 		}
 		else err.statut = 'vide';		
-	}
+	}*/
 	
 	retourClick():void {
 		location.href = "salle_liste.html";		
