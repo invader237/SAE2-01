@@ -22,7 +22,7 @@
         </div>
         <div>
           <label for="edt_facture_date">le</label>
-          <span><input id="edt_facture_date" size="5" type="text"></span><label id="lbl_erreur_date" class="labelerreur"></label>
+          <span><input id="edt_facture_date" type="date"></span><label id="lbl_erreur_date" class="labelerreur"></label>
         </div>
       </div>
       <div class="facture_rubrique">
@@ -85,7 +85,7 @@ l            <span>%</span>
           </div>
         </div>
   
-        <div id="div_facture_contenue_edit">
+        <div id="div_facture_contenue_edit" style="display: none;">
           <div class="divtitre" >
             Choisir un produit dans la liste
           </div>
@@ -113,8 +113,8 @@ l            <span>%</span>
 
       <div class="divaction">
         <input id="btn_facture_retour" class="btnretour" value="Retour" type="button">
-        <input id="btn_facture_valider" value="Valider" type="button">
-        <input id="btn_facture_annuler" class="btnannuler" value="Annuler" type="button">
+        <input id="btn_contenue_valider" type="button" value="Valider" style="display: none;">
+        <input id="btn_contenue_annuler" type="button" value="Annuler" style="display: none;">
       </div>
     </div>
   </body>
