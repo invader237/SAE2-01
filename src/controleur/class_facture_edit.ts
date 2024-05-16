@@ -1,4 +1,8 @@
 import { UneFacture } from "../modele/data_facture"
+import { UnClient } from "../modele/data_client"
+import { UnProduit } from "../modele/data_produit"
+
+
 
 type TFactureEditForm = { 
 	divDetail:HTMLElement, 
@@ -39,108 +43,6 @@ type TErreur 		=  {
 }
 
 
-
-class UnClient{
-	private _id   : string;
-	private _civ  : string;
-	private _nom   :string;
-	private _prenom  : string;
-	private _mel  : string;
-	private _adr  : string;
-	private _cp  : string;
-	private _commune  : string;
-	private _remiseMax  : string;
-
-	constructor(id: string, civ: string, nom: string, prenom: string, mel: string, adr: string,cp: string, commune : string, remiseMax : string ){
-		this._id= id
-		this._civ= civ 
-		this._nom= nom 
-		this._prenom= prenom 
-		this._mel= mel 
-		this._adr= adr 
-		this._cp= cp 
-		this._commune= commune 
-		this._remiseMax= remiseMax
-	}
-
-	get id():string{
-		return this._id
-	}
-
-	get civ():string{
-		return this._civ
-	}
-	get nom():string{
-		return this._nom
-	}
-	get prenom():string{
-		return this._prenom
-	}
-	get mel():string{
-		return this._mel
-	}
-	get adr():string{
-		return this._adr
-	}
-	get cp():string{
-		return this._cp
-	}
-	get commune():string{
-		return this._commune
-	}
-	get remiseMax():string{
-		return this._remiseMax
-	}
-}
-
-class UnProduit {
-	private _codeProduit:number;
-	private _libProduit:string;
-	private _typeProduit:string;
-	private _condProduit:number;
-	private _puProduit:number;
-	private _qteProduit:number;
-
-	constructor(codeProduit: number, libProduit: string, typeProduit: string, condProduit: number, puProduit: number, qteProduit: number){
-		this._codeProduit = codeProduit;
-		this._libProduit = libProduit;
-		this._typeProduit = typeProduit;
-		this._condProduit = condProduit;
-		this._puProduit = puProduit;
-		this._qteProduit = qteProduit;
-	}
-
-	montant():number{
-		return this._puProduit*this._qteProduit
-	}
-
-	get codeProduit():number{
-		return this._codeProduit
-	}
-
-	get libProduit(): string{
-		return this._libProduit
-	}
-
-	get typeProduit():string{
-		return this._typeProduit
-	}
-
-	get condProduit():number{
-		return this._condProduit
-	}
-
-	get puProduit():number{
-		return this._puProduit
-	}
-
-	get qteProduit():number{
-		return this._qteProduit
-	}
-
-}
-
-
 class VueFactureEdit {
 	private _form 		: TFactureEditForm
 	private _unProduit: UnProduit
@@ -177,7 +79,7 @@ class VueFactureEdit {
 		this.form.listeContenue.style.display = "none";
 		this.form.edtContenueQte.style.display = "none";
 		this._uneFacture=new UneFacture("1", "2024-05-23", "1", "BOZZO","75", "10", "30")
-		this._unProduit= new UnProduit(27,"Evian","eau en bouteille",0.5,8,10)
+		this._unProduit= new UnProduit("27","Evian","eau en bouteille","0.5","8","10")
 		this._unClient = new UnClient("1","M.","BOZZO","Raoul","bozzo.raoul@gmail.com", "24 rue du cirque","57000","Metz","20")
 		this.affichageListe();
 		this.initMsgErreur();
@@ -198,7 +100,7 @@ class VueFactureEdit {
 			this.form.edtLib.readOnly 		= affi;
 			this.form.edtClient.readOnly 	= affi;
 			this.erreur.edtNum.statut 		= "correct";
-			this.detailClient();
+			//this.detailClient();
 		}
 	}
 	afficherFactureEdit():void {
@@ -216,13 +118,13 @@ class VueFactureEdit {
 		// crÃ©ation balise <a> pour appel page visualisation du dÃ©tail de la salle
 		balisea = document.createElement("a")
 
-		tr.insertCell().textContent = this._unProduit.codeProduit.toString();
-		tr.insertCell().textContent = this._unProduit.libProduit
-		tr.insertCell().textContent = this._unProduit.typeProduit;
-		tr.insertCell().textContent = this._unProduit.condProduit.toString();
-		tr.insertCell().textContent = this._unProduit.puProduit.toString();
-		tr.insertCell().textContent = this._unProduit.qteProduit.toString();
-		tr.insertCell().textContent = this._unProduit.montant().toString();	
+		tr.insertCell().textContent = this._unProduit.code;
+		tr.insertCell().textContent = this._unProduit.nom;
+		tr.insertCell().textContent = this._unProduit.type;
+		tr.insertCell().textContent = this._unProduit.cond;
+		tr.insertCell().textContent = this._unProduit.prixUnit;
+		tr.insertCell().textContent = this._unProduit.qte;
+		tr.insertCell().textContent = this._unProduit.prixTotal();	
 	}
 
 	affiGrilleProduit():void {
@@ -253,7 +155,7 @@ class VueFactureEdit {
 		err.statut = "correct";
 		const chaine : string = valeur.trim();
 		if (chaine.length > 0) {
-			//const dept : UnDept = lesDepts.byCodeDept(chaine); 
+			const client : UnClient = DesClient.byCodeDept(chaine); 
 			if (this._unClient.id !== "") {	// client trouvé 
 				detail.textContent 
 				= this._unClient +"\r\n" +this._unClient.civ+this._unClient.nom+this._unClient.prenom+this._unClient.adr+this._unClient.cp+this._unClient.commune+this._unClient.remiseMax; 
