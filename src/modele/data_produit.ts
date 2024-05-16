@@ -102,7 +102,8 @@ class DesProduits {
             sql += " WHERE " + where;
         }
 
-        sql += `FROM 
+        sql += `
+            FROM 
             produit p
             JOIN 
             ligne l ON p.code_prod = l.code_prod;`;
