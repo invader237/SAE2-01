@@ -107,11 +107,6 @@ class VueFactureEdit {
         this.form.btnValiderContenue.onclick = function(): void{
             vueFactureEdit.validerContenue();
         }
-
-
-        const dataProduit = this._dataProduit;
-        const unProduit: UnProduit = dataProduit["VOSSP"];
-        alert(unProduit.nom)
     }
 
     
@@ -178,7 +173,6 @@ class VueFactureEdit {
     }
 
     ajoutListeContenue(unProduit: UnProduit): void {
-        alert(unProduit.nom)
         //a terminer 
         /*if (!unProduit) {
             console.error('Product data is undefined');
