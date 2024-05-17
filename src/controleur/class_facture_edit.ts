@@ -13,7 +13,7 @@ type TFactureEditForm = {
     edtLib: HTMLInputElement,
     edtDate: HTMLInputElement,
     edtClient: HTMLInputElement,
-    edtLivraison: HTMLTableElement,
+    edtLivraison: HTMLSelectElement,
     edtRemise: HTMLInputElement,
     btnRetour: HTMLInputElement,
     btnValider: HTMLInputElement,
@@ -35,6 +35,7 @@ type TFactureEditForm = {
     btnAnnulerEquipt: HTMLInputElement,
     lblSelectEquiptErreur: HTMLLabelElement,
     lblQteErreur: HTMLLabelElement,
+    prixLivraison: HTMLSpanElement
 }
 
 type TStatutValeur = 'correct' | 'vide' | 'inconnu' | 'doublon'
@@ -51,6 +52,7 @@ class VueFactureEdit {
     private _dataProduit: TProduits;
     private _dataFacture: TFactures;
     private _dataClient: TClients;
+    private _dataLivraisons: TLivraisons
     private _erreur: { [key: string]: TErreur }
 
     get form(): TFactureEditForm {
@@ -78,7 +80,11 @@ class VueFactureEdit {
         const desClients = new DesClients();
         this._dataClient = desClients.all();
 
+        const lesLivraisons = new DesLivraisons();
+        this._dataLivraisons = lesLivraisons.all()
 
+
+        this.afficheSelectLivraison()
         //this.affichageListe();
         //this.selectLivraison();
         //this.initMsgErreur();
@@ -91,6 +97,9 @@ class VueFactureEdit {
         }
         this.form.btnRetour.onclick = function(): void {
             vueFactureEdit.retourClick();
+        }
+        this.form.edtLivraison.onchange = function(): void {
+            vueFactureEdit.changerPrixLivraison();
         }
     }
 
@@ -209,12 +218,18 @@ class VueFactureEdit {
         }
     }
 
-    selectLivraison() {
-        const tr = this.form.edtLivraison.insertRow();
+    afficheSelectLivraison() {
+        const dataLivraisons = this._dataLivraisons;
+        for (let num in dataLivraisons) {
+            const uneLivraisons: UneLivraison = dataLivraisons[num];
+            this._form.edtLivraison.options.add(new Option(uneLivraisons.libForfait, uneLivraisons.idForfait));
+        }
+    }
 
-        tr.insertCell().textContent = this._uneLivraison.idForfait;
-        tr.insertCell().textContent = this._uneLivraison.libForfait;
-        tr.insertCell().textContent = this._uneLivraison.mtForfait;
+    changerPrixLivraison() {
+        const id = this.form.edtLivraison.value;
+        this.form.prixLivraison.textContent = this._dataLivraisons[id].mtForfait;
+
     }
 
     retourClick(): void {

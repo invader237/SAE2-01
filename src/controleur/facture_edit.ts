@@ -29,6 +29,7 @@ vueFactureEdit.init( {
                     ,btnAnnulerEquipt:document.querySelector('[id=btn_equipement_annuler]')
                     ,lblSelectEquiptErreur:document.querySelector('[id=lbl_erreur_select_contenue]')
                     ,lblQteErreur   :document.querySelector('[id=lbl_erreur_qte]')
+                    ,prixLivraison : document.querySelector('[id=delivery_fee]')
                     } );
 
 
