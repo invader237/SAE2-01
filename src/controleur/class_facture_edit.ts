@@ -237,7 +237,7 @@ class VueFactureEdit {
 
     changerPrixLivraison() {
         const id = this.form.edtLivraison.value;
-        this.form.prixLivraison.textContent = this._dataLivraisons[id].mtForfait;
+        this.form.prixLivraison.textContent = this._dataLivraisons[id].mtForfait + "€";
 
     }
 
