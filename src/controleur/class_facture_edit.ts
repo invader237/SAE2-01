@@ -17,6 +17,7 @@ type TFactureEditForm = {
     edtRemise: HTMLInputElement,
     btnRetour: HTMLInputElement,
     btnValider: HTMLInputElement,
+    btnValiderContenue: HTMLInputElement,
     btnAnnuler: HTMLInputElement,
     lblDetailClient: HTMLLabelElement,
     lblNumErreur: HTMLLabelElement,
@@ -98,10 +99,22 @@ class VueFactureEdit {
         this.form.btnRetour.onclick = function(): void {
             vueFactureEdit.retourClick();
         }
+
         this.form.edtLivraison.onchange = function(): void {
             vueFactureEdit.changerPrixLivraison();
         }
+
+        this.form.btnValiderContenue.onclick = function(): void{
+            vueFactureEdit.validerContenue();
+        }
+
+
+        const dataProduit = this._dataProduit;
+        const unProduit: UnProduit = dataProduit["VOSSP"];
+        alert(unProduit.nom)
     }
+
+    
 
     initMsgErreur(): void {
         this._erreur = {
@@ -164,21 +177,23 @@ class VueFactureEdit {
         this.form.btnValider.hidden = false;
     }
 
-    affichageListe(): void {
+    ajoutListeContenue(unProduit: UnProduit): void {
+        alert(unProduit.nom)
         //a terminer 
-        const tr = this.form.tableContenue.insertRow();
-        //a supp
-        let balisea: HTMLAnchorElement; // dÃ©claration balise <a>
-        // crÃ©ation balise <a> pour appel page visualisation du dÃ©tail de la salle
-        balisea = document.createElement("a")
+        /*if (!unProduit) {
+            console.error('Product data is undefined');
+            return; // Exit the function if no product data is provided
+        }*/
+        const table = this.form.tableContenue as HTMLTableElement;
+        const tr = table.insertRow()
 
-        tr.insertCell().textContent = this._unProduit.code;
-        tr.insertCell().textContent = this._unProduit.nom;
-        tr.insertCell().textContent = this._unProduit.type;
-        tr.insertCell().textContent = this._unProduit.cond;
-        tr.insertCell().textContent = this._unProduit.prixUnit;
-        tr.insertCell().textContent = this._unProduit.qte;
-        tr.insertCell().textContent = this._unProduit.prixTotal();
+        //tr.insertCell().textContent = unProduit["code"];
+       /*tr.insertCell().textContent = unProduit.nom;
+        tr.insertCell().textContent = unProduit.type;
+        tr.insertCell().textContent = unProduit.cond;
+        tr.insertCell().textContent = unProduit.prixUnit;
+        tr.insertCell().textContent = unProduit.qte;
+        tr.insertCell().textContent = unProduit.prixTotal();*/
     }
 
     /*
@@ -243,6 +258,17 @@ class VueFactureEdit {
         this.form.listeContenue.selectedIndex = 0;
     }
 */
+
+    validerContenue(){
+        alert(this.form.edtQte.value)
+        const produitIndex = this.form.listeContenue.selectedIndex
+        const dataProduit = this._dataProduit;
+        alert(produitIndex)
+        alert(typeof(produitIndex))
+        //const unProduit: UnProduit = dataProduit[produitIndex.toString()];
+        alert(dataProduit[produitIndex])
+
+    }
 }
 
 let vueFactureEdit = new VueFactureEdit;
