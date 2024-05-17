@@ -84,7 +84,6 @@ class VueFactureEdit {
         const lesLivraisons = new DesLivraisons();
         this._dataLivraisons = lesLivraisons.all()
 
-
         this.afficheSelectLivraison()
         //this.affichageListe();
         //this.selectLivraison();
@@ -104,12 +103,12 @@ class VueFactureEdit {
             vueFactureEdit.changerPrixLivraison();
         }
 
-        this.form.btnValiderContenue.onclick = function(): void{
-            vueFactureEdit.validerContenue();
+        this.form.btnValiderContenue.onclick = function(): void {
+            vueFactureEdit.ajouterContenue();
         }
     }
 
-    
+
 
     initMsgErreur(): void {
         this._erreur = {
@@ -182,12 +181,12 @@ class VueFactureEdit {
         const tr = table.insertRow()
 
         //tr.insertCell().textContent = unProduit["code"];
-       /*tr.insertCell().textContent = unProduit.nom;
-        tr.insertCell().textContent = unProduit.type;
-        tr.insertCell().textContent = unProduit.cond;
-        tr.insertCell().textContent = unProduit.prixUnit;
-        tr.insertCell().textContent = unProduit.qte;
-        tr.insertCell().textContent = unProduit.prixTotal();*/
+        /*tr.insertCell().textContent = unProduit.nom;
+         tr.insertCell().textContent = unProduit.type;
+         tr.insertCell().textContent = unProduit.cond;
+         tr.insertCell().textContent = unProduit.prixUnit;
+         tr.insertCell().textContent = unProduit.qte;
+         tr.insertCell().textContent = unProduit.prixTotal();*/
     }
 
     /*
@@ -244,23 +243,32 @@ class VueFactureEdit {
     retourClick(): void {
         location.href = "salle_liste.html";
     }
-/*
-    modifierEquiptClick(id: string): void {
-        this.afficherFactureEdit();
-        this.form.listeContenue.length = 0;
-        this.form.listeContenue.options.add(new Option(this._unProduit.nom, this._unProduit.code.toString()));	// text, value = 0;
-        this.form.listeContenue.selectedIndex = 0;
-    }
-*/
+    /*
+        modifierEquiptClick(id: string): void {
+            this.afficherFactureEdit();
+            this.form.listeContenue.length = 0;
+            this.form.listeContenue.options.add(new Option(this._unProduit.nom, this._unProduit.code.toString()));	// text, value = 0;
+            this.form.listeContenue.selectedIndex = 0;
+        }
+    */
 
-    validerContenue(){
-        alert(this.form.edtQte.value)
-        const produitIndex = this.form.listeContenue.selectedIndex
-        const dataProduit = this._dataProduit;
-        alert(produitIndex)
-        alert(typeof(produitIndex))
-        //const unProduit: UnProduit = dataProduit[produitIndex.toString()];
-        alert(dataProduit[produitIndex])
+    ajouterContenue() {
+        const produitValue = this.form.listeContenue.value
+        const unProduit = this._dataProduit[produitValue]
+
+        const qte = this.form.edtQte.value
+        alert(qte)
+
+        const table = this.form.tableContenue as HTMLTableElement;
+        const tr = table.insertRow()
+
+        tr.insertCell().textContent = unProduit["code"];
+        tr.insertCell().textContent = unProduit.nom;
+        tr.insertCell().textContent = unProduit.type;
+        tr.insertCell().textContent = unProduit.cond;
+        tr.insertCell().textContent = unProduit.prixUnit;
+        tr.insertCell().textContent = qte;
+        tr.insertCell().textContent = unProduit.prixTotal(qte);
 
     }
 }
