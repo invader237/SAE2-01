@@ -17,8 +17,8 @@ class UnProduit {
         this._qte = qte;
     }
 
-    prixTotal(): string {
-        return (parseInt(this._prixUnit, 10) * parseInt(this._qte, 10)).toString();
+    prixTotal(qte: string): string {
+        return (parseFloat(this._prixUnit) * parseInt(qte, 10)).toString();
     }
 
     get code(): string {
