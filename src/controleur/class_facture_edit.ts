@@ -92,20 +92,6 @@ class VueFactureEdit {
         this.form.btnRetour.onclick = function(): void {
             vueFactureEdit.retourClick();
         }
-        /*
-        const affi = this.params[0] === 'affi';
-        if (this.params[0] !== 'ajout') {	// affi ou modif ou suppr
-            this.form.edtNum.value = this._uneFacture.numero;
-            this.form.edtLib.value = this._uneFacture.nomClient;
-            this.form.edtDate.value = this._uneFacture.date;
-            this.form.edtClient.value = this._unClient.id;
-            this.form.edtNum.readOnly = true;
-            this.form.edtLib.readOnly = affi;
-            this.form.edtClient.readOnly = affi;
-            this.erreur.edtNum.statut = "correct";
-            //this.detailClient();
-        }
-        */
     }
 
     initMsgErreur(): void {
@@ -186,6 +172,7 @@ class VueFactureEdit {
         tr.insertCell().textContent = this._unProduit.prixTotal();
     }
 
+    /*
     affiGrilleProduit(): void {
         const tr = this.form.tableContenue.insertRow();
         let balisea: HTMLAnchorElement; // déclaration balise <a>
@@ -199,7 +186,7 @@ class VueFactureEdit {
         balisea.classList.add('img_corbeille')
         balisea.onclick = function(): void { vueFactureEdit.supprimerEquiptClick(id); }
         tr.insertCell().appendChild(balisea)
-    }
+    } */
 
     affichageProduit(): void {
         const dataProduit = this._dataProduit;
@@ -233,14 +220,14 @@ class VueFactureEdit {
     retourClick(): void {
         location.href = "salle_liste.html";
     }
-
+/*
     modifierEquiptClick(id: string): void {
         this.afficherFactureEdit();
         this.form.listeContenue.length = 0;
         this.form.listeContenue.options.add(new Option(this._unProduit.nom, this._unProduit.code.toString()));	// text, value = 0;
         this.form.listeContenue.selectedIndex = 0;
     }
-
+*/
 }
 
 let vueFactureEdit = new VueFactureEdit;
