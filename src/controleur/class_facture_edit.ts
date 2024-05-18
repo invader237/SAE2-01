@@ -34,6 +34,7 @@ type TFactureEditForm = {
     edtContenueQte: HTMLElement
     btnValiderEquipt: HTMLInputElement,
     btnAnnulerEquipt: HTMLInputElement,
+    lblDetailProduit: HTMLLabelElement,
     lblSelectEquiptErreur: HTMLLabelElement,
     lblQteErreur: HTMLLabelElement,
     prixLivraison: HTMLSpanElement
@@ -46,8 +47,12 @@ type TErreur = {
     msg: { [key in TStatutValeur]: string }
 }
 
+type TUnProduitDansFacture = {
+
+}
 
 class VueFactureEdit {
+    private _grille: TUnProduitDansFacture
     private _form: TFactureEditForm
     private _params: string[];
     private _dataProduit: TProduits;
@@ -64,6 +69,10 @@ class VueFactureEdit {
     }
     get erreur(): { [key: string]: TErreur } {
         return this._erreur
+    }
+
+    get grille(): TUnProduitDansFacture{
+        return this._grille
     }
 
     init(form: TFactureEditForm) {
@@ -91,6 +100,9 @@ class VueFactureEdit {
 
         this.form.edtClient.onchange = function(): void {
             vueFactureEdit.detailClient()
+        }
+        this.form.listeContenue.onchange = function(): void {
+            vueFactureEdit.detailProduit()
         }
         this.form.btnAjouterFacture.onclick = function(): void {
             vueFactureEdit.afficherFactureEdit();
@@ -195,18 +207,7 @@ class VueFactureEdit {
 
     /*
     affiGrilleProduit(): void {
-        const tr = this.form.tableContenue.insertRow();
-        let balisea: HTMLAnchorElement; // déclaration balise <a>
-        // création balise <a> pour appel modification équipement dans salle
-        balisea = document.createElement("a")
-        balisea.classList.add('img_modification')
-        balisea.onclick = function(): void { vueFactureEdit.modifierEquiptClick(id); }
-        tr.insertCell().appendChild(balisea)
-        // création balise <a> pour appel suppression équipement dans salle
-        balisea = document.createElement("a")
-        balisea.classList.add('img_corbeille')
-        balisea.onclick = function(): void { vueFactureEdit.supprimerEquiptClick(id); }
-        tr.insertCell().appendChild(balisea)
+      
     } */
 
     affichageProduit(): void {
@@ -227,6 +228,19 @@ class VueFactureEdit {
         if (detailClient["nom"] !== "") {	// département trouvé 
             detail.textContent
                 = detailClient["civ"] + " " + detailClient["nom"] + " " + detailClient["prenom"] + "\r\n" + detailClient["adr"] + " - " + detailClient["cp"] + " " + detailClient["commune"] + "\r\n" + detailClient["mel"] + "\r\n" + "taux de remise maximum accordé : " + detailClient["remiseMax"] + "%";
+        }
+    }
+
+    detailProduit(): void {
+        // a réecrire/améliorer
+        const dataProduit = this._dataProduit;
+        const detail = this.form.lblDetailProduit;
+        const valeur = this.form.listeContenue.value
+        const detailProduit = dataProduit[valeur];
+        (detailProduit["nom"])
+        if (detailProduit["nom"] !== "") {	// département trouvé 
+            detail.textContent
+                = detailProduit["type"] + "\r\n" + detailProduit["cond"] + "cl" + "\r\n" + detailProduit["origine"] + "\r\n" + detailProduit["prixUnit"] + "€";
         }
     }
 
@@ -256,7 +270,7 @@ class VueFactureEdit {
         }
     */
 
-    ajouterContenue() {
+    afficherContenue() {
         const produitValue = this.form.listeContenue.value
         const unProduit = this._dataProduit[produitValue]
 
@@ -273,6 +287,17 @@ class VueFactureEdit {
         tr.insertCell().textContent = qte;
         tr.insertCell().textContent = unProduit.prixTotal(qte);
 
+        let balisea: HTMLAnchorElement; // déclaration balise <a>
+        // création balise <a> pour appel modification équipement dans salle
+        balisea = document.createElement("a")
+        balisea.classList.add('img_modification')
+        balisea.onclick = function(): void { vueFactureEdit.modifierProduitClick(unProduit.code); }
+        tr.insertCell().appendChild(balisea)
+        // création balise <a> pour appel suppression équipement dans salle
+        balisea = document.createElement("a")
+        balisea.classList.add('img_corbeille')
+        balisea.onclick = function(): void { vueFactureEdit.supprimerProduitClick(unProduit.code); }
+        tr.insertCell().appendChild(balisea)
     }
 
     creerFacture() {
@@ -298,6 +323,24 @@ class VueFactureEdit {
 
         }
     }
+
+    modifierProduitClick(id: string): void {
+        // Afficher la section d'édition du produit
+        this.affichageProduit();    
+    
+        // Remplir les champs du formulaire avec les détails du produit
+        const dataProduit = this._dataProduit;
+        const num = id
+        for (let num in dataProduit) {
+            const unProduit: UnProduit = dataProduit[num];
+            this._form.listeContenue.options.add(new Option(unProduit.nom, unProduit.code));
+        
+    }
+    }
+
+    supprimerProduitClick(id : string):void {
+
+	}
 }
 
 let vueFactureEdit = new VueFactureEdit;
