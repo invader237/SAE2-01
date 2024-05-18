@@ -105,7 +105,7 @@ class VueFactureEdit {
         this.form.edtClient.onchange = function(): void {
             vueFactureEdit.detailClient()
         }
-        this.form.listeContenue.onchange = function(): void {
+        this.form.listeContenue.onchange= function(): void {
             vueFactureEdit.detailProduit()
         }
         this.form.btnAjouterFacture.onclick = function(): void {
@@ -367,12 +367,8 @@ class VueFactureEdit {
 
     supprimerProduitClick(code: string): void {
         if (confirm("Confirmez-vous le du produit de cet facture ")) {
-            for (let num in this.grille) {
-                if(this._grille[num]["code"] === code) {
-                    delete this._grille[num];
-                    this.afficherContenue();
-                }
-            }
+			delete(this._grille[code]);			
+			this.afficherGrille();
 		}
     }
 
