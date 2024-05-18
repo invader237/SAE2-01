@@ -85,7 +85,7 @@ class DesProduits {
             p.lib_prod,
             p.type,
             p.conditionnement,
-            p.tarif_ht,`;
+            p.tarif_ht`;
 
         if (where !== "") {
             sql += " WHERE " + where;
