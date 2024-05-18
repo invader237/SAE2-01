@@ -1,6 +1,6 @@
 import { vueFactureEdit } from "./class_facture_edit";
 
-vueFactureEdit.init( {
+vueFactureEdit.init({
                      divDetail      :document.querySelector('[id=div_facture_detail]')
                     ,edtNum			:document.querySelector('[id=edt_facture_num]')
                     ,divTitre		:document.querySelector('[id=div_facture_titre]')
@@ -28,6 +28,7 @@ vueFactureEdit.init( {
                     ,edtContenueQte :document.querySelector('[id=contenue_qte]')
                     ,btnValiderEquipt:document.querySelector('[id=btn_equipement_valider]')
                     ,btnAnnulerEquipt:document.querySelector('[id=btn_equipement_annuler]')
+                    ,lblDetailProduit: document.querySelector('[id=lbl_detail_produit]')
                     ,lblSelectEquiptErreur:document.querySelector('[id=lbl_erreur_select_contenue]')
                     ,lblQteErreur   :document.querySelector('[id=lbl_erreur_qte]')
                     ,prixLivraison : document.querySelector('[id=delivery_fee]')
