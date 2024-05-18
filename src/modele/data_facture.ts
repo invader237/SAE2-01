@@ -1,5 +1,5 @@
 import { APIsql } from "../modele/connexion.js"
-import { TdataSet, sqlWeb } from "./sqlWeb.js";
+import { sqlWeb } from "./sqlWeb.js";
 
 class UneFacture {
     private _numero: string;

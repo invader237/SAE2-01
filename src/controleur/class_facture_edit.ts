@@ -50,12 +50,8 @@ type TErreur = {
     msg: { [key in TStatutValeur]: string }
 }
 
-type TUnProduitDansFacture = {
-
-}
-
 class VueFactureEdit {
-    private _grille: TUnProduitDansFacture
+    private _grille: TProduitDansFacture
     private _form: TFactureEditForm
     private _params: string[];
     private _dataProduit: TProduits;
@@ -74,11 +70,11 @@ class VueFactureEdit {
         return this._erreur
     }
 
-    get grille(): TUnProduitDansFacture {
+    get grille(): TProduitDansFacture {
         return this._grille
     }
 
-    set grille(grille: UnProduitDansFacture) {
+    set grille(grille: TProduitDansFacture) {
         this._grille = grille
     }
 
@@ -225,7 +221,6 @@ class VueFactureEdit {
         detail.textContent = "";		
         const chaine : string = valeur.trim();
         if (chaine.length > 0) {
-            alert(typeof(detailClient["nom"]))
             if (detailClient["nom"] !== null) {	// client trouvé 
                 detail.textContent
                 = detailClient["civ"] + " " + detailClient["nom"] + " " + detailClient["prenom"] + "\r\n" + detailClient["adr"] + " - " + detailClient["cp"] + " " + detailClient["commune"] + "\r\n" + detailClient["mel"] + "\r\n" + "taux de remise maximum accordé : " + detailClient["remiseMax"] + "%";
@@ -372,8 +367,12 @@ class VueFactureEdit {
 
     supprimerProduitClick(code: string): void {
         if (confirm("Confirmez-vous le du produit de cet facture ")) {
-			delete(this._grille[code]);			
-			this.afficherGrille();
+            for (let num in this.grille) {
+                if(this._grille[num]["code"] === code) {
+                    delete this._grille[num];
+                    this.afficherContenue();
+                }
+            }
 		}
     }
 
