@@ -4,13 +4,15 @@ class UnProduit {
     private _code: string;
     private _nom: string;
     private _type: string;
+    private _origine: string
     private _cond: string;
     private _prixUnit: string;
 
-    constructor(code: string, nom: string, type: string, cond: string, prixUnit: string) {
+    constructor(code: string, nom: string, type: string, origine:string, cond: string, prixUnit: string) {
         this._code = code;
         this._nom = nom;
         this._type = type;
+        this._origine= origine
         this._cond = cond;
         this._prixUnit = prixUnit;
     }
@@ -31,6 +33,10 @@ class UnProduit {
         return this._type
     }
 
+    get origine(): string {
+        return this._origine
+    }
+
     get cond(): string {
         return this._cond
     }
@@ -49,6 +55,10 @@ class UnProduit {
 
     set type(type: string) {
         this._type = type;
+    }
+
+    set origine(origine: string) {
+        this._origine = origine
     }
 
     set cond(cond: string) {
@@ -84,6 +94,7 @@ class DesProduits {
             DISTINCT(p.code_prod),
             p.lib_prod,
             p.type,
+            p.origine,
             p.conditionnement,
             p.tarif_ht`;
 
@@ -104,7 +115,7 @@ class DesProduits {
         for (let i = 0; i < result.length; i++) {
             const item: APIsql.TtabAsso = result[i];
             const produit = new UnProduit(item['code_prod'], item['lib_prod'], item['type'],
-                item["conditionnement"], item["tarif_ht"]);
+                item['origine'],item["conditionnement"], item["tarif_ht"]);
             produits[produit.code] = produit;	// clé d’un élément du tableau : num produit
         }
         return produits;

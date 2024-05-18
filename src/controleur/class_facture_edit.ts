@@ -116,7 +116,7 @@ class VueFactureEdit {
         }
 
         this.form.btnValiderContenue.onclick = function(): void {
-            vueFactureEdit.ajouterContenue();
+            vueFactureEdit.afficherContenue();
         }
 
         this.form.btnValider.onclick = function(): void {
@@ -187,29 +187,6 @@ class VueFactureEdit {
         this.form.btnValider.hidden = false;
     }
 
-    ajoutListeContenue(unProduit: UnProduit): void {
-        //a terminer 
-        /*if (!unProduit) {
-            console.error('Product data is undefined');
-            return; // Exit the function if no product data is provided
-        }*/
-        const table = this.form.tableContenue as HTMLTableElement;
-        const tr = table.insertRow()
-
-        //tr.insertCell().textContent = unProduit["code"];
-        /*tr.insertCell().textContent = unProduit.nom;
-         tr.insertCell().textContent = unProduit.type;
-         tr.insertCell().textContent = unProduit.cond;
-         tr.insertCell().textContent = unProduit.prixUnit;
-         tr.insertCell().textContent = unProduit.qte;
-         tr.insertCell().textContent = unProduit.prixTotal();*/
-    }
-
-    /*
-    affiGrilleProduit(): void {
-      
-    } */
-
     affichageProduit(): void {
         const dataProduit = this._dataProduit;
         for (let num in dataProduit) {
@@ -261,14 +238,6 @@ class VueFactureEdit {
     retourClick(): void {
         location.href = "salle_liste.html";
     }
-    /*
-        modifierEquiptClick(id: string): void {
-            this.afficherFactureEdit();
-            this.form.listeContenue.length = 0;
-            this.form.listeContenue.options.add(new Option(this._unProduit.nom, this._unProduit.code.toString()));	// text, value = 0;
-            this.form.listeContenue.selectedIndex = 0;
-        }
-    */
 
     afficherContenue() {
         const produitValue = this.form.listeContenue.value
