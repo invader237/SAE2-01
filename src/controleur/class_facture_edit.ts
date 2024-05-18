@@ -9,6 +9,7 @@ import { UneLivraison, DesLivraisons, TLivraisons } from "../modele/data_livrais
 type TFactureEditForm = {
     divDetail: HTMLElement,
     divTitre: HTMLElement,
+    divChoixTitre :HTMLElement
     edtNum: HTMLInputElement,
     edtLib: HTMLInputElement,
     edtDate: HTMLInputElement,
@@ -83,7 +84,7 @@ class VueFactureEdit {
 
     init(form: TFactureEditForm) {
         this._form = form
-
+        this.form.divChoixTitre.hidden = true;
         this.form.listeContenue.style.display = "none";
         this.form.edtContenueQte.style.display = "none";
 
@@ -195,6 +196,7 @@ class VueFactureEdit {
         this.form.btnAjouterFacture.hidden = true;
         this.form.btnAnnuler.hidden = false;
         this.form.btnValider.hidden = false;
+        this.form.divChoixTitre.hidden = false;
     }
 
     masquerFactureEdit(): void {
@@ -203,6 +205,7 @@ class VueFactureEdit {
         this.form.btnAjouterFacture.hidden = false;
         this.form.btnAnnuler.hidden = false;
         this.form.btnValider.hidden = false;
+        this.form.divChoixTitre.hidden = true;
     }
 
     affichageProduit(): void {
@@ -257,7 +260,7 @@ class VueFactureEdit {
 
     changerPrixLivraison() {
         const id = this.form.edtLivraison.value;
-        this.form.prixLivraison.textContent = this._dataLivraisons[id].mtForfait + "€";
+        this.form.prixLivraison.textContent = this._dataLivraisons[id].libForfait + "," + this._dataLivraisons[id].mtForfait + "€";
 
     }
 

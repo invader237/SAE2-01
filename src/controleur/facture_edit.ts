@@ -4,6 +4,7 @@ vueFactureEdit.init({
                      divDetail      :document.querySelector('[id=div_facture_detail]')
                     ,edtNum			:document.querySelector('[id=edt_facture_num]')
                     ,divTitre		:document.querySelector('[id=div_facture_titre]')
+                    ,divChoixTitre :document.querySelector('[id=div_choix_titre]')
                     ,edtLib			:document.querySelector('[id=edt_facture_lib]')
                     ,edtDate		:document.querySelector('[id=edt_facture_date]')
                     ,edtClient	:document.querySelector('[id=edt_facture_num_client]')
