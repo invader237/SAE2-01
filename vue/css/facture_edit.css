@@ -11,8 +11,9 @@
 }
 
 .facture_commentaire {
+  font-family: sans-serif;
   text-align : left;
-  font-size  : 0.9em;	
+  font-size  : 1em;	
   white-space: pre;   /* sÃ©ries de blancs et sauts de ligne \r\n conservÃ©s */
 }
 
@@ -23,6 +24,8 @@
   display 		: grid;
   grid-template-columns : 1fr 1fr; 
   border-bottom : 2px solid #808080;  
+  height: 200px;
+  max-height: 1000px;
 }
 
 .equipement_rubrique{
@@ -56,4 +59,49 @@ input [id="edt_discount"]{
 
 #edt_facture_lib {
   padding-bottom: 50px;
+}
+
+#lbl_detail_produit {
+  position: relative;
+  left: 250px;
+  bottom: 225px;
+}
+
+.produit_commentaire {
+  font-family: sans-serif;
+  text-align : left;
+  font-size  : 1.2em;	
+  white-space: pre;   /* sÃ©ries de blancs et sauts de ligne \r\n conservÃ©s */
+}
+
+#edt_contenue_qte{
+  position: relative;
+  left: 400px;
+  bottom: 150px;
+  width: 60px;
+}
+
+label[for=edt_contenue_qte]{
+  position: relative;
+  left: 400px;
+  bottom: 150px;
+  width: 60px;
+}
+
+#btn_contenue_valider{
+  position: relative;
+  left: 430px;
+  bottom: 100px;
+  width: 60px;
+}
+
+#btn_contenue_annuler{
+  position: relative;
+  left: 430px;
+  bottom: 100px;
+  width: 60px;
+}
+
+#btn_facture_annuler{
+  background-color: #ff7000;;
 }
