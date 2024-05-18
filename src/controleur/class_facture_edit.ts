@@ -314,12 +314,9 @@ class VueFactureEdit {
         const livraison = this.form.edtLivraison.value
         const remise = this.form.edtRemise.value
 
-        const facture = new UneFacture('7', date.toString(), com.toString(), numClient.toString(), "", "",
+        const facture = new UneFacture("" ,date.toString(), com.toString(), numClient.toString(), "", "",
             remise.toString(), livraison.toString());
-        alert(facture.numero + facture.date + facture.commentFact + facture.remise + facture.client + facture.livraison)
         facture.insert();
-        //const lesFactures = new LesFactures;
-        //lesFactures.insert(facture)
     }
 
     modifierProduitClick(id: string): void {
