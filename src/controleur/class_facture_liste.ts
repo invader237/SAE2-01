@@ -1,4 +1,6 @@
+import { UnClient, DesClients, TClients } from "../modele/data_client";
 import { UneFacture, LesFactures, TFactures } from "../modele/data_facture";
+import { UneLivraison, DesLivraisons, TLivraisons } from "../modele/data_livraison"
 
 type TFactureListeForm = {
     divTitre: HTMLElement;
@@ -8,7 +10,11 @@ type TFactureListeForm = {
 
 class VueFactureListe {
     private _form: TFactureListeForm;
-    private _donneListe: UneFacture;
+    private _uneFacture: UneFacture;
+    private _dataClient: TClients;
+    private _dataLivraisons: TLivraisons;
+    
+
 
     constructor() {
 
@@ -18,8 +24,8 @@ class VueFactureListe {
         return this._form
     }
 
-    get donneListe(): UneFacture {
-        return this._donneListe
+    get uneFacture(): UneFacture {
+        return this._uneFacture
     }
 
     init(form: TFactureListeForm): void {
@@ -27,6 +33,13 @@ class VueFactureListe {
 
         const lesFactures = new LesFactures;
         const data: TFactures = lesFactures.all();
+
+        const desClients = new DesClients();
+        this._dataClient = desClients.all();
+
+        const lesLivraisons = new DesLivraisons();
+        this._dataLivraisons = lesLivraisons.all()
+
         this.affichageListe(data);
         this.form.btnAjouter.onclick = function(): void {
             vueFactureListe.ajouterFactureClick();
@@ -50,6 +63,8 @@ class VueFactureListe {
 
         for (let num in data) {
             const uneFacture: UneFacture = data[num];
+            const unClient : UnClient = this._dataClient[uneFacture.client];
+            const uneLivraisons : UneLivraison = this._dataLivraisons[uneFacture.livraison]
 
             const tr = this.form.tableFacture.insertRow();
             let balisea: HTMLAnchorElement; // dÃ©claration balise <a>
@@ -62,19 +77,20 @@ class VueFactureListe {
             tr.insertCell().textContent = uneFacture.date;
             tr.insertCell().textContent = uneFacture.client;
             tr.insertCell().textContent = uneFacture.nomClient;
-            tr.insertCell().textContent = uneFacture.prix;
-            tr.insertCell().textContent = uneFacture.avecRemise();
-            tr.insertCell().textContent = uneFacture.livraison;
+            tr.insertCell().textContent = unClient["commune"];
+            tr.insertCell().textContent = uneFacture.prix + "€";
+            tr.insertCell().textContent = uneFacture.avecRemise()+ "€";
+            tr.insertCell().textContent = uneLivraisons["mtForfait"] + "€";
 
             // crÃ©ation balise <a> pour appel page modification du dÃ©tail de la salle
             balisea = document.createElement("a")
             balisea.classList.add('img_modification')
-            balisea.onclick = function(): void { vueFactureListe.modifierFactureClick(vueFactureListe.donneListe.numero.toString()); }
+            balisea.onclick = function(): void { vueFactureListe.modifierFactureClick(vueFactureListe.uneFacture.numero.toString()); }
             tr.insertCell().appendChild(balisea)
             // crÃ©ation balise <a> pour appel page suppression d'une salle
             balisea = document.createElement("a")
             balisea.classList.add('img_corbeille')
-            balisea.onclick = function(): void { vueFactureListe.supprimerFactureClick(vueFactureListe.donneListe.numero.toString()); }
+            balisea.onclick = function(): void { vueFactureListe.supprimerFactureClick(vueFactureListe.uneFacture.numero.toString()); }
             tr.insertCell().appendChild(balisea)
 
         }
