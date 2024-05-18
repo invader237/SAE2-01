@@ -143,7 +143,7 @@ class VueFactureEdit {
         this.form.edtClient.onchange = function(): void {
             vueFactureEdit.detailClient()
         }
-        this.form.listeContenue.onchange = function(): void {
+        this.form.listeContenue.onchange= function(): void {
             vueFactureEdit.detailProduit()
         }
         this.form.btnAjouterFacture.onclick = function(): void {

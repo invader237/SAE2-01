@@ -5,7 +5,7 @@
 // dÃ©finition de la classe 
 class VueInventaire {
     init():void {
-      location.href = "salle_liste.html";	
+      location.href = "facture_liste.html";	
     }
   }
   
