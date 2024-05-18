@@ -219,14 +219,15 @@ class LesProduitsDansFacture {
             p.lib_prod,
             qte_prod`;
 
-
-        if (where !== "") {
-            sql += " WHERE l.num_facture = " + where + " AND l.code_prod = p.code_prod";
-        }
-
         sql += `
             FROM 
-            ligne l, produit p`;
+            ligne l, produit p
+            `;
+
+        if (where !== "") {
+            sql += "WHERE l.num_fact = " + where + " \n AND l.code_prod = p.code_prod";
+        }
+
 
         return sql;
     }
