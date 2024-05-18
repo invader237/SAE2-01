@@ -75,6 +75,10 @@ class VueFactureEdit {
         return this._grille
     }
 
+    set grille(grille: UnProduitDansFacture) {
+        this._grille = grille
+    }
+
     init(form: TFactureEditForm) {
         this._form = form
 
@@ -252,11 +256,11 @@ class VueFactureEdit {
 
     afficherContenue() {
         while (this.form.tableContenue.rows.length > 1) {
-			this.form.tableContenue.rows[1].remove();
-		}
+            this.form.tableContenue.rows[1].remove();
+        }
 
         const dataProduit = this._dataProduit
-        for ( let num in this.grille){
+        for (let num in this.grille) {
             const unProduitDansFacture = this._grille[num]
             const unProduit = dataProduit[unProduitDansFacture.code]
             const table = this.form.tableContenue as HTMLTableElement;
@@ -284,16 +288,21 @@ class VueFactureEdit {
         }
     }
 
-    afficherGrille(){
-        const produitValue = this.form.listeContenue.value
-        const unProduit = this._dataProduit[produitValue]
+    afficherGrille() {
+        const produitValue = this.form.listeContenue.value;
+        const unProduit = this._dataProduit[produitValue];
 
-        const qte = this.form.edtQte.value
-        const nom = unProduit.nom
-        const code = unProduit["code"]
+        const qte = this.form.edtQte.value;
+        const nom = unProduit.nom;
+        const code = unProduit["code"];
 
-        const unProduitDansFacture = new UnProduitDansFacture(code.toString(), nom, qte.toString())
-        this._grille[unProduitDansFacture.code] = unProduitDansFacture
+        if (!this._grille) {
+            this._grille = {};
+        }
+
+        const unProduitDansFacture = new UnProduitDansFacture(code.toString(), nom, qte.toString());
+
+        this._grille[code] = unProduitDansFacture;
 
         this.afficherContenue();
     }
@@ -305,7 +314,7 @@ class VueFactureEdit {
         const livraison = this.form.edtLivraison.value
         const remise = this.form.edtRemise.value
 
-        const facture = new UneFacture('5', date.toString(), com.toString(), numClient.toString(), "", "",
+        const facture = new UneFacture('7', date.toString(), com.toString(), numClient.toString(), "", "",
             remise.toString(), livraison.toString());
         alert(facture.numero + facture.date + facture.commentFact + facture.remise + facture.client + facture.livraison)
         facture.insert();
