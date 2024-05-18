@@ -201,8 +201,8 @@ class VueFactureEdit {
         this.form.listeContenue.style.display = "none";
         this.form.edtContenueQte.style.display = "none";
         this.form.btnAjouterFacture.hidden = false;
-        this.form.btnAnnuler.hidden = true;
-        this.form.btnValider.hidden = true;
+        this.form.btnAnnuler.hidden = false;
+        this.form.btnValider.hidden = false;
     }
 
     affichageProduit(): void {
@@ -262,7 +262,7 @@ class VueFactureEdit {
     }
 
     retourClick(): void {
-        location.href = "salle_liste.html";
+        location.href = "facture_liste.html";
     }
 
     afficherContenue() {
@@ -304,7 +304,7 @@ class VueFactureEdit {
             liv= parseInt(this._dataLivraisons[id].mtForfait, 10)
             ht+= parseInt(unProduit.prixTotal(unProduitDansFacture.qte),10)+liv;
             remise += (parseInt(this.form.edtRemise.value,10)/100)*ht;
-            total+= ht-remise+liv;
+            total+= ht-remise;
         }
         this.form.lblHt.textContent = ht.toFixed(2) + "€";
         this.form.lblRemise.textContent = remise.toFixed(2) + "€";
@@ -367,8 +367,11 @@ class VueFactureEdit {
         }
     }
 
-    supprimerProduitClick(id: string): void {
-
+    supprimerProduitClick(code: string): void {
+        if (confirm("Confirmez-vous le du produit de cet facture ")) {
+			delete(this._grille[code]);			
+			this.afficherGrille();
+		}
     }
 
     verifListeEquipt():void {
