@@ -80,6 +80,17 @@ class VueFactureEdit {
 
     init(form: TFactureEditForm) {
         this._form = form
+
+        this._params = location.search.substring(1).split('&');
+        let titre: string;
+        switch (this.params[0]) {
+            case 'suppr': titre = "Suppression d'une salle"; break;
+            case 'ajout': titre = "Nouvelle salle"; break;
+            case 'modif': titre = "Modification d'une salle"; break;
+            default: titre = "Détail d'une salle";
+        }
+        this.form.divTitre.textContent = titre;
+        
         this.form.divChoixTitre.hidden = true;
         this.form.listeContenue.style.display = "none";
         this.form.edtContenueQte.style.display = "none";
@@ -95,6 +106,33 @@ class VueFactureEdit {
 
         const lesLivraisons = new DesLivraisons();
         this._dataLivraisons = lesLivraisons.all()
+
+
+        const affi = this.params[0] !== 'affi';
+        if (this.params[0] !== 'ajout') {	// affi ou modif ou suppr
+            const facture = lesFactures.byNumFacture(this._params[1]);
+
+            this.form.edtNum.value = facture.numero;
+            this.form.edtLib.value = facture.commentFact;
+            this.form.edtDate.value = facture.date;
+            this.form.edtClient.value = facture.client;
+            this.form.edtRemise.value = facture.remise;
+
+            this.form.edtNum.readOnly = affi;
+            this.form.edtLib.readOnly = affi;
+            this.form.edtDate.readOnly = affi;
+            this.form.edtClient.readOnly = affi;
+            this.form.edtRemise.readOnly = affi;
+            //this.erreur.edtNum.statut = "correct";
+            //this.detailClient();
+            alert("1")
+            const lesProduitDansFacture = new LesProduitsDansFacture(facture.numero)
+            this._grille = lesProduitDansFacture.all();
+            alert(this._grille[''])
+            alert("2")
+            this.afficherContenue()
+        }
+
 
         this.afficheSelectLivraison();
         this.initMsgErreur();
