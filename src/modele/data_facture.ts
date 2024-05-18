@@ -11,7 +11,7 @@ class UneFacture {
     private _remise: string;
     private _livraison: string;
 
-    constructor(numero: string, date: string, commentFact: string, client: string, nomClient: string, prix: string, remise: string, livraison: string) {
+    constructor(numero: string  = "", date: string = "", commentFact: string = "", client: string = "", nomClient: string = "", prix: string = "", remise: string = "", livraison: string = "") {
         this._numero = numero;
         this._date = date;
         this._commentFact = commentFact;
@@ -173,6 +173,17 @@ class LesFactures {
         }
         return T;
     }
+
+    byNumFacture (num_facture : string) : UneFacture	{ // renvoie lâ€™objet correspondant Ã  la facutre num_facutre
+            let facutre = new UneFacture();
+            const facutres : TFactures = this.load(APIsql.sqlWeb.SQLloadData(this.prepare("num_fact = ?"),[num_facture]));
+            const lesCles: string[] = Object.keys(facutres);
+            // affecte les clÃ©s du tableau associatif Â« facutres Â» dans le tableau de chaines Â« lesCles Â»
+            if ( lesCles.length > 0) {
+                facutre = facutres[lesCles[0]];	// rÃ©cupÃ©rer le 1er Ã©lÃ©ment du tableau associatif Â« facutres Â»
+            }
+            return facutre;
+	}
 
     delete(num_fact: string): boolean {	// requÃªte de suppression dâ€™une facture dans la table
         let sql = "DELETE FROM facture WHERE num_fact = ?";
