@@ -367,9 +367,13 @@ class VueFactureEdit {
 
     supprimerProduitClick(code: string): void {
         if (confirm("Confirmez-vous le du produit de cet facture ")) {
-			delete(this._grille[code]);			
-			this.afficherGrille();
-		}
+            for (let num in this.grille) {
+                if (this._grille[num]["code"] === code) {
+                    delete this._grille[num];
+                    this.afficherContenue();
+                }
+            }
+        }
     }
 
     verifListeEquipt():void {
