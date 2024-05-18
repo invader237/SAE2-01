@@ -23,7 +23,7 @@ class UneFacture {
     }
 
     avecRemise(): string {
-        return (parseInt(this._prix, 10) - parseInt(this._prix, 10) * (parseInt(this._remise, 10) / 100)).toString();
+        return (parseFloat(this._prix) - parseFloat(this._prix) * (parseInt(this._remise, 10) / 100)).toString();
     }
 
     get numero(): string {
