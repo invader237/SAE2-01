@@ -99,7 +99,7 @@ class UneFacture {
     }
 
     insert(): boolean {	// requÃªte dâ€™ajout dâ€™une this._dans la table				// requÃªte de manipulation : utiliser SQLexec
-        let sql = "INSERT INTO facture (date_fact,comment_fact,taux_remise_fact,id_cli,id_forfait) VALUES(?, ?, ?, ?, ?, ?)";
+        let sql = "INSERT INTO facture (date_fact,comment_fact,taux_remise_fact,id_cli,id_forfait) VALUES(?, ?, ?, ?, ?)";
         return APIsql.sqlWeb.SQLexec(sql, [this._date,this._commentFact,this._remise,this._client,this._livraison] );
     }
 
