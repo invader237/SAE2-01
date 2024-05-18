@@ -218,7 +218,6 @@ class VueFactureEdit {
         detail.textContent = "";		
         const chaine : string = valeur.trim();
         if (chaine.length > 0) {
-            alert(typeof(detailClient["nom"]))
             if (detailClient["nom"] !== null) {	// client trouvé 
                 detail.textContent
                 = detailClient["civ"] + " " + detailClient["nom"] + " " + detailClient["prenom"] + "\r\n" + detailClient["adr"] + " - " + detailClient["cp"] + " " + detailClient["commune"] + "\r\n" + detailClient["mel"] + "\r\n" + "taux de remise maximum accordé : " + detailClient["remiseMax"] + "%";
