@@ -27,6 +27,8 @@ type TFactureEditForm = {
     divFacture: HTMLDivElement,
     divFactureEdit: HTMLDivElement,
     btnAjouterFacture: HTMLInputElement,
+    lblHt:HTMLLabelElement,
+    lblRemise: HTMLLabelElement,
     lblTotal: HTMLLabelElement,
     tableContenue: HTMLTableElement
     listeContenue: HTMLSelectElement,
@@ -97,7 +99,8 @@ class VueFactureEdit {
         const lesLivraisons = new DesLivraisons();
         this._dataLivraisons = lesLivraisons.all()
 
-        this.afficheSelectLivraison()
+        this.afficheSelectLivraison();
+        this.initMsgErreur();
         //this.affichageListe();
         //this.selectLivraison();
         //this.initMsgErreur();
@@ -166,7 +169,7 @@ class VueFactureEdit {
                     doublon: ""
                 }
             }
-            , listeEquipt: {
+            , listeContenue: {
                 statut: 'vide', msg: {
                     correct: "",
                     vide: "Aucun produit choisi",
@@ -211,17 +214,27 @@ class VueFactureEdit {
     }
 
     detailClient(): void {
+        const err = this.erreur.edtCodeDept
         const dataClient = this._dataClient;
         const detail = this.form.lblDetailClient;
         const valeur = vueFactureEdit.form.edtClient.value
         const detailClient = dataClient[valeur];
-        (detailClient["nom"])
-            if (detailClient["nom"] !== "") {	// client trouvé 
+        detail.textContent = "";		
+        const chaine : string = valeur.trim();
+        if (chaine.length > 0) {
+            alert(typeof(detailClient["nom"]))
+            if (detailClient["nom"] !== null) {	// client trouvé 
                 detail.textContent
                 = detailClient["civ"] + " " + detailClient["nom"] + " " + detailClient["prenom"] + "\r\n" + detailClient["adr"] + " - " + detailClient["cp"] + " " + detailClient["commune"] + "\r\n" + detailClient["mel"] + "\r\n" + "taux de remise maximum accordé : " + detailClient["remiseMax"] + "%";
             }
+            else { 
+                err.statut = 'inconnu';
+                detail.textContent = err.msg.inconnu;	
+            }
+        }
+        else err.statut = 'vide';		
     }
-
+    
     detailProduit(): void {
         const dataProduit = this._dataProduit;
         const detail = this.form.lblDetailProduit;
@@ -256,7 +269,11 @@ class VueFactureEdit {
         while (this.form.tableContenue.rows.length > 1) {
             this.form.tableContenue.rows[1].remove();
         }
-
+        const id = this.form.edtLivraison.value;
+        let liv=0;
+        let ht = 0;
+        let remise = 0;
+        let   total = 0;	
         const dataProduit = this._dataProduit
         for (let num in this.grille) {
             const unProduitDansFacture = this._grille[num]
@@ -283,10 +300,19 @@ class VueFactureEdit {
             balisea.classList.add('img_corbeille')
             balisea.onclick = function(): void { vueFactureEdit.supprimerProduitClick(unProduit.code); }
             tr.insertCell().appendChild(balisea)
+            
+            liv= parseInt(this._dataLivraisons[id].mtForfait, 10)
+            ht+= parseInt(unProduit.prixTotal(unProduitDansFacture.qte),10)+liv;
+            remise += (parseInt(this.form.edtRemise.value,10)/100)*ht;
+            total+= ht-remise+liv;
         }
+        this.form.lblHt.textContent = ht.toFixed(2) + "€";
+        this.form.lblRemise.textContent = remise.toFixed(2) + "€";
+        this.form.lblTotal.textContent = total.toFixed(2) + "€";
     }
 
     afficherGrille() {
+        this.verifQte();
         const produitValue = this.form.listeContenue.value;
         const unProduit = this._dataProduit[produitValue];
 
@@ -333,6 +359,24 @@ class VueFactureEdit {
     supprimerProduitClick(id: string): void {
 
     }
+
+    verifListeEquipt():void {
+		const err = this._erreur.listeContenue;
+		err.statut = "correct";
+		const cible  = this._form.listeContenue;
+		if (cible.value === "")	{
+			err.statut = 'vide'
+		}
+	}
+
+    verifQte():void {
+		const err = this._erreur.edtQte
+		err.statut = "correct";
+		const valeur : string = this._form.edtQte.value;
+		if ( ! ( (Number.isInteger(Number(valeur))) && (Number(valeur)>0) ) ) {
+			err.statut = 'vide'
+		}
+	}
 }
 let vueFactureEdit = new VueFactureEdit;
 export { vueFactureEdit };
