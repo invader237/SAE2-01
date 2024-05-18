@@ -71,7 +71,7 @@ class VueFactureEdit {
         return this._erreur
     }
 
-    get grille(): TUnProduitDansFacture{
+    get grille(): TUnProduitDansFacture {
         return this._grille
     }
 
@@ -303,45 +303,41 @@ class VueFactureEdit {
     creerFacture() {
         const com = this.form.edtLib.value
         const date = this.form.edtDate.value
-        const numClient = this.form.edtClient
-        const livraison = this.form.edtLivraison
-        const remise = this.form.edtRemise
+        const numClient = this.form.edtClient.value
+        const livraison = this.form.edtLivraison.value
+        const remise = this.form.edtRemise.value
 
-        const table = this.form.tableContenue as HTMLTableElement
-        const rows = table.rows;
-        for (let i = 1; i < rows.length; i++) {
-            const row = rows[i];
-            const cells = row.cells;
-            alert(row)
-
-            // Parcourez chaque cellule de la ligne
-            for (let j = 0; j < cells.length; j++) {
-                const cell = cells[j];
-                alert(cell.textContent)
-                // Faites quelque chose avec chaque cellule, par exemple, affichez son contenu
-            }
-
-        }
+        const facture = new UneFacture('10', date.toString(), com.toString(), numClient.toString(), "", "",
+            remise.toString(), livraison.toString());
+        alert(facture.numero + facture.date + facture.commentFact + facture.remise + facture.client + facture.livraison)
+        const lesFactures = new LesFactures;
+        lesFactures.insert(facture)
     }
+
+
 
     modifierProduitClick(id: string): void {
         // Afficher la section d'édition du produit
-        this.affichageProduit();    
-    
+        this.affichageProduit();
+
         // Remplir les champs du formulaire avec les détails du produit
         const dataProduit = this._dataProduit;
         const num = id
         for (let num in dataProduit) {
             const unProduit: UnProduit = dataProduit[num];
             this._form.listeContenue.options.add(new Option(unProduit.nom, unProduit.code));
-        
-    }
+
+        }
     }
 
-    supprimerProduitClick(id : string):void {
+    supprimerProduitClick(id: string): void {
 
-	}
-}
+    }
+
+    convertir_date(date:string): string {
+        jour, mois, annee = date.split('/')
+        return f"{annee}/{mois}/{jour}"
+    }
 
 let vueFactureEdit = new VueFactureEdit;
 export { vueFactureEdit };
