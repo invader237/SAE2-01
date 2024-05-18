@@ -106,6 +106,10 @@ class VueFactureEdit {
         this.form.btnValiderContenue.onclick = function(): void {
             vueFactureEdit.ajouterContenue();
         }
+
+        this.form.btnValider.onclick = function(): void {
+            vueFactureEdit.creerFacture();
+        }
     }
 
 
@@ -257,7 +261,6 @@ class VueFactureEdit {
         const unProduit = this._dataProduit[produitValue]
 
         const qte = this.form.edtQte.value
-        alert(qte)
 
         const table = this.form.tableContenue as HTMLTableElement;
         const tr = table.insertRow()
@@ -270,6 +273,30 @@ class VueFactureEdit {
         tr.insertCell().textContent = qte;
         tr.insertCell().textContent = unProduit.prixTotal(qte);
 
+    }
+
+    creerFacture() {
+        const com = this.form.edtLib.value
+        const date = this.form.edtDate.value
+        const numClient = this.form.edtClient
+        const livraison = this.form.edtLivraison
+        const remise = this.form.edtRemise
+
+        const table = this.form.tableContenue as HTMLTableElement
+        const rows = table.rows;
+        for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+            const cells = row.cells;
+            alert(row)
+
+            // Parcourez chaque cellule de la ligne
+            for (let j = 0; j < cells.length; j++) {
+                const cell = cells[j];
+                alert(cell.textContent)
+                // Faites quelque chose avec chaque cellule, par exemple, affichez son contenu
+            }
+
+        }
     }
 }
 
