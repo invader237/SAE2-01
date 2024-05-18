@@ -6,15 +6,13 @@ class UnProduit {
     private _type: string;
     private _cond: string;
     private _prixUnit: string;
-    private _qte: string;
 
-    constructor(code: string, nom: string, type: string, cond: string, prixUnit: string, qte: string) {
+    constructor(code: string, nom: string, type: string, cond: string, prixUnit: string) {
         this._code = code;
         this._nom = nom;
         this._type = type;
         this._cond = cond;
         this._prixUnit = prixUnit;
-        this._qte = qte;
     }
 
     prixTotal(qte: string): string {
@@ -41,10 +39,6 @@ class UnProduit {
         return this._prixUnit
     }
 
-    get qte(): string {
-        return this._qte;
-    }
-
     set code(code: string) {
         this._code = code;
     }
@@ -65,17 +59,13 @@ class UnProduit {
         this._prixUnit = prixUnit;
     }
 
-    set qte(qte: string) {
-        this._qte = qte;
-    }
-
     toArray(): APIsql.TtabAsso {
         // renvoie l’objet sous la forme d’un tableau associatif 
         // pour un affichage dans une ligne d’un tableau HTML
         const tableau: APIsql.TtabAsso = {
             'code': this._code, 'nom': this._nom,
             'type': this._type, 'cond': this._cond,
-            'prixUnit': this._prixUnit, 'qte': this._qte,
+            'prixUnit': this._prixUnit
         };
         return tableau;
     }
@@ -91,12 +81,11 @@ class DesProduits {
 
     private prepare(where: string = ""): string { // La valeur par défaut de "where" est une chaîne vide
         let sql = `SELECT 
-            p.code_prod,
+            DISTINCT(p.code_prod),
             p.lib_prod,
             p.type,
             p.conditionnement,
-            p.tarif_ht,
-            l.qte_prod`;
+            p.tarif_ht,`;
 
         if (where !== "") {
             sql += " WHERE " + where;
@@ -104,9 +93,7 @@ class DesProduits {
 
         sql += `
             FROM 
-            produit p
-            JOIN 
-            ligne l ON p.code_prod = l.code_prod;`;
+            produit p, ligne l`;
 
         return sql;
     }
@@ -117,7 +104,7 @@ class DesProduits {
         for (let i = 0; i < result.length; i++) {
             const item: APIsql.TtabAsso = result[i];
             const produit = new UnProduit(item['code_prod'], item['lib_prod'], item['type'],
-                item["conditionnement"], item["tarif_ht"], item["qte_prod"]);
+                item["conditionnement"], item["tarif_ht"]);
             produits[produit.code] = produit;	// clé d’un élément du tableau : num produit
         }
         return produits;
@@ -137,7 +124,7 @@ class DesProduits {
         return T;
     }
 
-    ajoutAFacture(numFacture: string, produit: UnProduit): boolean {
+/*    ajoutAFacture(numFacture: string, produit: UnProduit): boolean {
         let sql = "INSERT INTO ligne(num_fact, code_prod, qte_prod) VALUES(?, ?, ?)";
         return APIsql.sqlWeb.SQLexec(sql, [numFacture, produit.code, produit.qte]);
     }
@@ -151,7 +138,7 @@ class DesProduits {
     suppDansFacture(numFacture: string, produit: UnProduit): boolean {
         let sql = "DELETE FROM ligne WHERE num_fact = ? AND code_prod = ?";
         return APIsql.sqlWeb.SQLexec(sql, [numFacture, produit.code]);
-    }
+    }*/
 
 }
 
@@ -164,7 +151,7 @@ class UnProduitDansFacture {
     private _prixUnit: string;
     private _qte: string;
 
-    constructor(code: string, nom: string, origine:string, type: string, cond: string, prixUnit: string, qte: string) {
+    constructor(code: string, nom: string, origine: string, type: string, cond: string, prixUnit: string, qte: string) {
         this._code = code;
         this._nom = nom;
         this._origine = origine;
@@ -284,8 +271,8 @@ class LesProduitsDansFacture {
         let produitsDansFacture: TProduitDansFacture = {};
         for (let i = 0; i < result.length; i++) {
             const item: APIsql.TtabAsso = result[i];
-            const produitDansFacture = new UnProduitDansFacture(item['code_prod'], item['lib_prod'], item["origine"], 
-                item['type'], item["conditionnement"],item["tarif_ht"], item["qte_prod"]);
+            const produitDansFacture = new UnProduitDansFacture(item['code_prod'], item['lib_prod'], item["origine"],
+                item['type'], item["conditionnement"], item["tarif_ht"], item["qte_prod"]);
             produitsDansFacture[produitDansFacture.code] = produitDansFacture;	// clé d’un élément du tableau : num produit
         }
         return produitsDansFacture;
@@ -309,9 +296,9 @@ class LesProduitsDansFacture {
 
 }
 
-export{ UnProduitDansFacture };
-export{ LesProduitsDansFacture };
-export{ TProduitDansFacture };
+export { UnProduitDansFacture };
+export { LesProduitsDansFacture };
+export { TProduitDansFacture };
 
 export { UnProduit };
 export { DesProduits };
