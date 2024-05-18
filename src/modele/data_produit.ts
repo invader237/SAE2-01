@@ -124,45 +124,32 @@ class DesProduits {
         return T;
     }
 
-/*    ajoutAFacture(numFacture: string, produit: UnProduit): boolean {
-        let sql = "INSERT INTO ligne(num_fact, code_prod, qte_prod) VALUES(?, ?, ?)";
-        return APIsql.sqlWeb.SQLexec(sql, [numFacture, produit.code, produit.qte]);
-    }
-
-    modifierDansFacture(numFacture: string, produit: UnProduit): boolean {
-        let sql = "UPDATE ligne SET code_prod = ?, qte_prod = ?";
-        sql += " WHERE num_facture = ?";
-        return APIsql.sqlWeb.SQLexec(sql, [produit.code, produit.qte, numFacture]);
-    }
-
-    suppDansFacture(numFacture: string, produit: UnProduit): boolean {
-        let sql = "DELETE FROM ligne WHERE num_fact = ? AND code_prod = ?";
-        return APIsql.sqlWeb.SQLexec(sql, [numFacture, produit.code]);
-    }*/
+    /*    ajoutAFacture(numFacture: string, produit: UnProduit): boolean {
+            let sql = "INSERT INTO ligne(num_fact, code_prod, qte_prod) VALUES(?, ?, ?)";
+            return APIsql.sqlWeb.SQLexec(sql, [numFacture, produit.code, produit.qte]);
+        }
+    
+        modifierDansFacture(numFacture: string, produit: UnProduit): boolean {
+            let sql = "UPDATE ligne SET code_prod = ?, qte_prod = ?";
+            sql += " WHERE num_facture = ?";
+            return APIsql.sqlWeb.SQLexec(sql, [produit.code, produit.qte, numFacture]);
+        }
+    
+        suppDansFacture(numFacture: string, produit: UnProduit): boolean {
+            let sql = "DELETE FROM ligne WHERE num_fact = ? AND code_prod = ?";
+            return APIsql.sqlWeb.SQLexec(sql, [numFacture, produit.code]);
+        }*/
 
 }
 
 class UnProduitDansFacture {
     private _code: string;
     private _nom: string;
-    private _origine: string;
-    private _type: string;
-    private _cond: string;
-    private _prixUnit: string;
     private _qte: string;
 
-    constructor(code: string, nom: string, origine: string, type: string, cond: string, prixUnit: string, qte: string) {
+    constructor(code: string, nom: string, qte: string) {
         this._code = code;
-        this._nom = nom;
-        this._origine = origine;
-        this._type = type;
-        this._cond = cond;
-        this._prixUnit = prixUnit;
         this._qte = qte;
-    }
-
-    prixTotal(): string {
-        return (parseInt(this._prixUnit, 10) * parseInt(this._qte, 10)).toString();
     }
 
     get code(): string {
@@ -171,22 +158,6 @@ class UnProduitDansFacture {
 
     get nom(): string {
         return this._nom;
-    }
-
-    get origine(): string {
-        return this._origine;
-    }
-
-    get type(): string {
-        return this._type;
-    }
-
-    get cond(): string {
-        return this._cond;
-    }
-
-    get prixUnit(): string {
-        return this._prixUnit;
     }
 
     get qte(): string {
@@ -201,22 +172,6 @@ class UnProduitDansFacture {
         this._nom = nom;
     }
 
-    set origine(origine: string) {
-        this._origine = origine;
-    }
-
-    set type(type: string) {
-        this._type = type;
-    }
-
-    set cond(cond: string) {
-        this._cond = cond;
-    }
-
-    set prixUnit(prixUnit: string) {
-        this._prixUnit = prixUnit;
-    }
-
     set qte(qte: string) {
         this._qte = qte;
     }
@@ -225,9 +180,7 @@ class UnProduitDansFacture {
         // renvoie l’objet sous la forme d’un tableau associatif 
         // pour un affichage dans une ligne d’un tableau HTML
         const tableau: APIsql.TtabAsso = {
-            'code': this._code, 'nom': this._nom, 'origine': this._origine,
-            'type': this._type, 'cond': this._cond,
-            'prixUnit': this._prixUnit, 'qte': this._qte,
+            'code': this._code, 'nom': this._nom, 'qte': this._qte,
         };
         return tableau;
     }
@@ -248,10 +201,6 @@ class LesProduitsDansFacture {
         let sql = `SELECT num_fact,
             l.code_prod,
             p.lib_prod,
-            p.origine,
-            p.type, 
-            p.conditionnement,
-            p.tarif_ht,
             qte_prod`;
 
 
@@ -271,8 +220,7 @@ class LesProduitsDansFacture {
         let produitsDansFacture: TProduitDansFacture = {};
         for (let i = 0; i < result.length; i++) {
             const item: APIsql.TtabAsso = result[i];
-            const produitDansFacture = new UnProduitDansFacture(item['code_prod'], item['lib_prod'], item["origine"],
-                item['type'], item["conditionnement"], item["tarif_ht"], item["qte_prod"]);
+            const produitDansFacture = new UnProduitDansFacture(item['code_prod'], item['lib_prod'], item["qte_prod"]);
             produitsDansFacture[produitDansFacture.code] = produitDansFacture;	// clé d’un élément du tableau : num produit
         }
         return produitsDansFacture;
@@ -293,6 +241,10 @@ class LesProduitsDansFacture {
     }
 
 
+    ajoutAFacture(numFacture: string, produit: UnProduitDansFacture): boolean {
+        let sql = "INSERT INTO ligne(num_fact, code_prod, qte_prod) VALUES(?, ?, ?)";
+        return APIsql.sqlWeb.SQLexec(sql, [numFacture, produit.code, produit.qte]);
+    }
 
 }
 
