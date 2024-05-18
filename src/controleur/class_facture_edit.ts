@@ -197,15 +197,26 @@ class VueFactureEdit {
 
     detailClient(): void {
         // a réecrire/améliorer
+        const err= this.erreur.edtCodeClient;
         const dataClient = this._dataClient;
         const detail = this.form.lblDetailClient;
+        detail.textContent=""
+        err.statut= "correct";
         const valeur = vueFactureEdit.form.edtClient.value
         const detailClient = dataClient[valeur];
-        (detailClient["nom"])
-        if (detailClient["nom"] !== "") {	// département trouvé 
-            detail.textContent
+        const chaine : string = valeur.trim();
+        if (chaine.length>0){
+            (detailClient["nom"])
+            if (detailClient["nom"] !== "") {	// département trouvé 
+                detail.textContent
                 = detailClient["civ"] + " " + detailClient["nom"] + " " + detailClient["prenom"] + "\r\n" + detailClient["adr"] + " - " + detailClient["cp"] + " " + detailClient["commune"] + "\r\n" + detailClient["mel"] + "\r\n" + "taux de remise maximum accordé : " + detailClient["remiseMax"] + "%";
+            }
+            else{
+                err.statut= 'inconnu'
+                detail.textContent= err.msg.inconnu
+            }
         }
+        else err.statut='vide'
     }
 
     detailProduit(): void {
@@ -308,7 +319,6 @@ class VueFactureEdit {
 
         // Remplir les champs du formulaire avec les détails du produit
         const dataProduit = this._dataProduit;
-        const num = id
         for (let num in dataProduit) {
             const unProduit: UnProduit = dataProduit[num];
             this._form.listeContenue.options.add(new Option(unProduit.nom, unProduit.code));
