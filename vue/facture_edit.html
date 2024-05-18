@@ -40,14 +40,13 @@
         <div class="commercial_info">
             <label for="edt_delivery">Livraison</label>
             <select id="edt_delivery" class="dropdown">
-              <option>-------------------------------------------------</option>
             </select>
             <span id="delivery_fee" class="delivery_fee"></span>
         </div>
         <div class="commercial_info">
           <label for="edt_discount">Remise</label>
           <div id="pourcentage">
-            <input id="edt_discount" type="number" value="10" class="discount_input">
+            <input id="edt_discount" type="number" value="0" class="discount_input">
             <span id="discount_percentage">%</span> 
           </div>
       </div>
@@ -92,7 +91,7 @@
         </div>
   
         <div id="div_facture_contenue_edit">
-          <div class="divtitre" >
+          <div class="divtitre" id="div_choix_titre">
             Choisir un produit dans la liste
           </div>
           <div class="contenue_rubrique">
