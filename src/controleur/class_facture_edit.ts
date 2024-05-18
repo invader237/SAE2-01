@@ -111,6 +111,9 @@ class VueFactureEdit {
         this.form.btnAjouterFacture.onclick = function(): void {
             vueFactureEdit.afficherFactureEdit();
         }
+        this.form.btnAnnulerEquipt.onclick = function(): void {
+            vueFactureEdit.masquerFactureEdit();
+        }
         this.form.btnRetour.onclick = function(): void {
             vueFactureEdit.retourClick();
         }
@@ -191,6 +194,14 @@ class VueFactureEdit {
         this.form.btnValider.hidden = false;
     }
 
+    masquerFactureEdit(): void {
+        this.form.listeContenue.style.display = "none";
+        this.form.edtContenueQte.style.display = "none";
+        this.form.btnAjouterFacture.hidden = false;
+        this.form.btnAnnuler.hidden = true;
+        this.form.btnValider.hidden = true;
+    }
+
     affichageProduit(): void {
         const dataProduit = this._dataProduit;
         for (let num in dataProduit) {
@@ -200,37 +211,24 @@ class VueFactureEdit {
     }
 
     detailClient(): void {
-        // a réecrire/améliorer
-        const err= this.erreur.edtCodeClient;
         const dataClient = this._dataClient;
         const detail = this.form.lblDetailClient;
-        detail.textContent=""
-        err.statut= "correct";
         const valeur = vueFactureEdit.form.edtClient.value
         const detailClient = dataClient[valeur];
-        const chaine : string = valeur.trim();
-        if (chaine.length>0){
-            (detailClient["nom"])
-            if (detailClient["nom"] !== "") {	// département trouvé 
+        (detailClient["nom"])
+            if (detailClient["nom"] !== "") {	// client trouvé 
                 detail.textContent
                 = detailClient["civ"] + " " + detailClient["nom"] + " " + detailClient["prenom"] + "\r\n" + detailClient["adr"] + " - " + detailClient["cp"] + " " + detailClient["commune"] + "\r\n" + detailClient["mel"] + "\r\n" + "taux de remise maximum accordé : " + detailClient["remiseMax"] + "%";
             }
-            else{
-                err.statut= 'inconnu'
-                detail.textContent= err.msg.inconnu
-            }
-        }
-        else err.statut='vide'
     }
 
     detailProduit(): void {
-        // a réecrire/améliorer
         const dataProduit = this._dataProduit;
         const detail = this.form.lblDetailProduit;
         const valeur = this.form.listeContenue.value
         const detailProduit = dataProduit[valeur];
         (detailProduit["nom"])
-        if (detailProduit["nom"] !== "") {	// département trouvé 
+        if (detailProduit["nom"] !== "") {	// produit trouvé 
             detail.textContent
                 = detailProduit["type"] + "\r\n" + detailProduit["cond"] + "cl" + "\r\n" + detailProduit["origine"] + "\r\n" + detailProduit["prixUnit"] + "€";
         }
