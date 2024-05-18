@@ -72,7 +72,7 @@ input [id="edt_discount"]{
 #lbl_detail_produit {
   position: relative;
   left: 250px;
-  bottom: 225px;
+  bottom: 275px;
 }
 
 .produit_commentaire {
