@@ -1,4 +1,5 @@
 import { APIsql } from "../modele/connexion.js"
+import { TdataSet, sqlWeb } from "./sqlWeb.js";
 
 class UneFacture {
     private _numero: string;
@@ -98,8 +99,15 @@ class UneFacture {
     }
 
     insert(): boolean {	// requÃªte dâ€™ajout dâ€™une this._dans la table				// requÃªte de manipulation : utiliser SQLexec
-        let sql = "INSERT INTO facture (date_fact,comment_fact,taux_remise_fact,id_cli,id_forfait) VALUES(?, ?, ?, ?, ?)";
-        return APIsql.sqlWeb.SQLexec(sql, [this._date,this._commentFact,this._remise,this._client,this._livraison]);
+        let sql = "INSERT INTO facture (date_fact,comment_fact,taux_remise_fact,id_cli,id_forfait) VALUES(?, ?, ?, ?, ?, ?)";
+        return APIsql.sqlWeb.SQLexec(sql, [this._date,this._commentFact,this._remise,this._client,this._livraison] );
+    }
+
+    lastNumFact(): string {
+        let sql = "SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'trivino7u_SAE2-01' AND TABLE_NAME = 'facture';"
+        const result: APIsql.TdataSet = sqlWeb.SQLloadData(sql, []);
+        return result[0]["AUTO_INCREMENT"].toString()
+        
     }
 
 }
