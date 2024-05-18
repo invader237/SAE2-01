@@ -73,7 +73,7 @@ class VueFactureEdit {
         return this._grille
     }
 
-    set grille(grille: UnProduitDansFacture) {
+    set grille(grille: TProduitDansFacture) {
         this._grille = grille
     }
 
