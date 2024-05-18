@@ -294,14 +294,13 @@ class VueFactureEdit {
         const livraison = this.form.edtLivraison.value
         const remise = this.form.edtRemise.value
 
-        const facture = new UneFacture('10', date.toString(), com.toString(), numClient.toString(), "", "",
+        const facture = new UneFacture('5', date.toString(), com.toString(), numClient.toString(), "", "",
             remise.toString(), livraison.toString());
         alert(facture.numero + facture.date + facture.commentFact + facture.remise + facture.client + facture.livraison)
-        const lesFactures = new LesFactures;
-        lesFactures.insert(facture)
+        facture.insert();
+        //const lesFactures = new LesFactures;
+        //lesFactures.insert(facture)
     }
-
-
 
     modifierProduitClick(id: string): void {
         // Afficher la section d'édition du produit
@@ -320,11 +319,6 @@ class VueFactureEdit {
     supprimerProduitClick(id: string): void {
 
     }
-
-    /*convertir_date(date:string): string {
-        jour, mois, annee = date.split('/')
-        return f"{annee}/{mois}/{jour}"
-    }*/
 }
 let vueFactureEdit = new VueFactureEdit;
 export { vueFactureEdit };

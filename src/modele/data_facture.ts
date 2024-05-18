@@ -97,6 +97,12 @@ class UneFacture {
         return tableau;
     }
 
+    insert(): boolean {	// requÃªte dâ€™ajout dâ€™une this._dans la table				// requÃªte de manipulation : utiliser SQLexec
+        alert(typeof(this._numero + this._date + this._commentFact + this._remise + this._client + this._livraison))
+        let sql = "INSERT INTO facture (num_fact,date_fact,comment_fact,taux_remise_fact,id_cli,id_forfait) VALUES(?, ?, ?, ?, ?, ?)";
+        return APIsql.sqlWeb.SQLexec(sql, [this._numero, this._date,this._commentFact,this._remise,this._client,this._livraison]);
+    }
+
 }
 
 
@@ -164,11 +170,6 @@ class LesFactures {
     delete(num_fact: string): boolean {	// requÃªte de suppression dâ€™une facture dans la table
         let sql = "DELETE FROM facture WHERE num_fact = ?";
         return APIsql.sqlWeb.SQLexec(sql, [num_fact]);		// requÃªte de manipulation : utiliser SQLexec
-    }
-
-    insert(facture: UneFacture): boolean {	// requÃªte dâ€™ajout dâ€™une facture dans la table				// requÃªte de manipulation : utiliser SQLexec
-        let sql = "INSERT INTO facture(num_fact,date_fact,comment_fact,taux_remise_fact,id_cli,id_forfait) VALUES(?, ?, ?, ?, ?, ?)";
-        return APIsql.sqlWeb.SQLexec(sql, [facture.numero, facture.date,facture.commentFact,facture.remise,facture.client,facture.livraison]);
     }
 
     update(facture: UneFacture): boolean {	// requÃªte de modification dâ€™une facture dans la table
