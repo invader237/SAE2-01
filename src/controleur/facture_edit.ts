@@ -21,6 +21,8 @@ vueFactureEdit.init({
                     ,divFacture   :document.querySelector('[id=div_facture_contenue]') 
                     ,divFactureEdit :document.querySelector('[id=div_facture_contenue_edit]')  
                     ,btnAjouterFacture:document.querySelector('[id=btn_contenue_ajouter]')
+                    ,lblHt:  document.querySelector('[id=lbl_ht]')
+                    ,lblRemise: document.querySelector('[id=lbl_remise]')
                     ,lblTotal       :document.querySelector('[id=lbl_contenue_total]')
                     ,tableContenue:document.querySelector('[id=table_contenue]')
                     ,listeContenue    :document.querySelector('[id=select_contenue]')
