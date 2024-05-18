@@ -9,7 +9,7 @@ import { UneLivraison, DesLivraisons, TLivraisons } from "../modele/data_livrais
 type TFactureEditForm = {
     divDetail: HTMLElement,
     divTitre: HTMLElement,
-    divChoixTitre :HTMLElement
+    divChoixTitre: HTMLElement
     edtNum: HTMLInputElement,
     edtLib: HTMLInputElement,
     edtDate: HTMLInputElement,
@@ -28,7 +28,7 @@ type TFactureEditForm = {
     divFacture: HTMLDivElement,
     divFactureEdit: HTMLDivElement,
     btnAjouterFacture: HTMLInputElement,
-    lblHt:HTMLLabelElement,
+    lblHt: HTMLLabelElement,
     lblRemise: HTMLLabelElement,
     lblTotal: HTMLLabelElement,
     tableContenue: HTMLTableElement
@@ -218,21 +218,21 @@ class VueFactureEdit {
         const detail = this.form.lblDetailClient;
         const valeur = vueFactureEdit.form.edtClient.value
         const detailClient = dataClient[valeur];
-        detail.textContent = "";		
-        const chaine : string = valeur.trim();
+        detail.textContent = "";
+        const chaine: string = valeur.trim();
         if (chaine.length > 0) {
             if (detailClient["nom"] !== null) {	// client trouvé 
                 detail.textContent
-                = detailClient["civ"] + " " + detailClient["nom"] + " " + detailClient["prenom"] + "\r\n" + detailClient["adr"] + " - " + detailClient["cp"] + " " + detailClient["commune"] + "\r\n" + detailClient["mel"] + "\r\n" + "taux de remise maximum accordé : " + detailClient["remiseMax"] + "%";
+                    = detailClient["civ"] + " " + detailClient["nom"] + " " + detailClient["prenom"] + "\r\n" + detailClient["adr"] + " - " + detailClient["cp"] + " " + detailClient["commune"] + "\r\n" + detailClient["mel"] + "\r\n" + "taux de remise maximum accordé : " + detailClient["remiseMax"] + "%";
             }
-            else { 
+            else {
                 err.statut = 'inconnu';
-                detail.textContent = err.msg.inconnu;	
+                detail.textContent = err.msg.inconnu;
             }
         }
-        else err.statut = 'vide';		
+        else err.statut = 'vide';
     }
-    
+
     detailProduit(): void {
         const dataProduit = this._dataProduit;
         const detail = this.form.lblDetailProduit;
@@ -268,10 +268,10 @@ class VueFactureEdit {
             this.form.tableContenue.rows[1].remove();
         }
         const id = this.form.edtLivraison.value;
-        let liv=0;
+        let liv = 0;
         let ht = 0;
         let remise = 0;
-        let   total = 0;	
+        let total = 0;
         const dataProduit = this._dataProduit
         for (let num in this.grille) {
             const unProduitDansFacture = this._grille[num]
@@ -298,11 +298,11 @@ class VueFactureEdit {
             balisea.classList.add('img_corbeille')
             balisea.onclick = function(): void { vueFactureEdit.supprimerProduitClick(unProduit.code); }
             tr.insertCell().appendChild(balisea)
-            
-            liv= parseInt(this._dataLivraisons[id].mtForfait, 10)
-            ht+= parseInt(unProduit.prixTotal(unProduitDansFacture.qte),10)+liv;
-            remise += (parseInt(this.form.edtRemise.value,10)/100)*ht;
-            total+= ht-remise;
+
+            liv = parseInt(this._dataLivraisons[id].mtForfait, 10)
+            ht += parseInt(unProduit.prixTotal(unProduitDansFacture.qte), 10) + liv;
+            remise += (parseInt(this.form.edtRemise.value, 10) / 100) * ht;
+            total += ht - remise;
         }
         this.form.lblHt.textContent = ht.toFixed(2) + "€";
         this.form.lblRemise.textContent = remise.toFixed(2) + "€";
@@ -337,7 +337,7 @@ class VueFactureEdit {
         const livraison = this.form.edtLivraison.value
         const remise = this.form.edtRemise.value
 
-        const facture = new UneFacture("" ,date.toString(), com.toString(), numClient.toString(), "", "",
+        const facture = new UneFacture("", date.toString(), com.toString(), numClient.toString(), "", "",
             remise.toString(), livraison.toString());
         const numFacture = facture.lastNumFact()
         facture.numero = numFacture;
@@ -376,23 +376,23 @@ class VueFactureEdit {
         }
     }
 
-    verifListeEquipt():void {
-		const err = this._erreur.listeContenue;
-		err.statut = "correct";
-		const cible  = this._form.listeContenue;
-		if (cible.value === "")	{
-			err.statut = 'vide'
-		}
-	}
+    verifListeEquipt(): void {
+        const err = this._erreur.listeContenue;
+        err.statut = "correct";
+        const cible = this._form.listeContenue;
+        if (cible.value === "") {
+            err.statut = 'vide'
+        }
+    }
 
-    verifQte():void {
-		const err = this._erreur.edtQte
-		err.statut = "correct";
-		const valeur : string = this._form.edtQte.value;
-		if ( ! ( (Number.isInteger(Number(valeur))) && (Number(valeur)>0) ) ) {
-			err.statut = 'vide'
-		}
-	}
+    verifQte(): void {
+        const err = this._erreur.edtQte
+        err.statut = "correct";
+        const valeur: string = this._form.edtQte.value;
+        if (!((Number.isInteger(Number(valeur))) && (Number(valeur) > 0))) {
+            err.statut = 'vide'
+        }
+    }
 }
 let vueFactureEdit = new VueFactureEdit;
 export { vueFactureEdit };
