@@ -332,6 +332,7 @@ class VueFactureEdit {
     }
 
     creerFacture() {
+
         const com = this.form.edtLib.value
         const date = this.form.edtDate.value
         const numClient = this.form.edtClient.value
@@ -340,7 +341,17 @@ class VueFactureEdit {
 
         const facture = new UneFacture("" ,date.toString(), com.toString(), numClient.toString(), "", "",
             remise.toString(), livraison.toString());
+        const numFacture = facture.lastNumFact()
+        facture.numero = numFacture;
+
+        for (let num in this.grille) {
+            const produit = this._grille[num]
+            const unProduitDansFacture = new UnProduitDansFacture(produit.code, produit.nom, produit.qte);
+            unProduitDansFacture.ajoutAFacture(numFacture, produit)
+        }
+
         facture.insert();
+
     }
 
     modifierProduitClick(id: string): void {

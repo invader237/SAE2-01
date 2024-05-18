@@ -195,6 +195,11 @@ class UnProduitDansFacture {
         };
         return tableau;
     }
+
+    ajoutAFacture(numFacture: string, produit: UnProduitDansFacture): boolean {
+        let sql = "INSERT INTO ligne(num_fact, code_prod, qte_prod) VALUES(?, ?, ?)";
+        return APIsql.sqlWeb.SQLexec(sql, [numFacture, produit.code, produit.qte]);
+    }
 }
 
 
@@ -249,12 +254,6 @@ class LesProduitsDansFacture {
             T.push(unProduitDansFacture[id].toArray());
         }
         return T;
-    }
-
-
-    ajoutAFacture(numFacture: string, produit: UnProduitDansFacture): boolean {
-        let sql = "INSERT INTO ligne(num_fact, code_prod, qte_prod) VALUES(?, ?, ?)";
-        return APIsql.sqlWeb.SQLexec(sql, [numFacture, produit.code, produit.qte]);
     }
 
 }
