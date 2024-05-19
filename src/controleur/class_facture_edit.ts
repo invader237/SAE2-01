@@ -136,8 +136,9 @@ class VueFactureEdit {
             this.form.edtLivraison.disabled = true;
             this.form.btnAnnuler.hidden = true;
             this.form.btnRetour.hidden = false;
+            this.form.btnValider.hidden = true;
             if( this.params[0] ==='modif'){
-            this.form.btnAjouterFacture.hidden = true;
+            this.form.btnValider.hidden = false;
             this.form.edtLivraison.disabled = false;
             this.form.btnAnnuler.hidden = false;
             this.form.btnRetour.hidden = true;
@@ -372,9 +373,13 @@ class VueFactureEdit {
         const nom = unProduit["nom"];
         const code = unProduit["code"];
 
+        if (this._grille){
+            this._grille = {};
+        }
+
         const unProduitDansFacture = new UnProduitDansFacture(code.toString(), nom.toString(), qte.toString());
 
-        this._grille[nom] = unProduitDansFacture;
+        this._grille[code] = unProduitDansFacture;
 
         this.afficherContenue();
     }
@@ -399,6 +404,7 @@ class VueFactureEdit {
         }
 
         facture.insert();
+        location.href = "facture_liste.html";
 
     }
 
