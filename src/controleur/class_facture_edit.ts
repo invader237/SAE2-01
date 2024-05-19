@@ -110,41 +110,36 @@ class VueFactureEdit {
         const lesLivraisons = new DesLivraisons();
         this._dataLivraisons = lesLivraisons.all()
 
+        this.genereNumFacture();
+        this.setDateOfToday();
 
-        const affi = this.params[0] !== 'affi';
-        if (this.params[0] === 'ajout') {	// affi ou modif ou suppr
+        const affi = this.params[0] === 'affi';
+        if (this.params[0] !== 'ajout') {	// affi ou modif ou suppr
             const facture = lesFactures.byNumFacture(this._params[1]);
-
+            const dataLivraisons : TLivraisons= this._dataLivraisons
+            const uneLivraisons: UneLivraison = dataLivraisons[facture.livraison];
             this.form.edtNum.value = facture.numero;
             this.form.edtLib.value = facture.commentFact;
             this.form.edtDate.value = facture.date;
             this.form.edtClient.value = facture.client;
             this.form.edtRemise.value = facture.remise;
+            this.form.edtLivraison.options.add(new Option(uneLivraisons.libForfait));
+
 
             this.form.edtNum.readOnly = affi;
             this.form.edtLib.readOnly = affi;
             this.form.edtDate.readOnly = affi;
             this.form.edtClient.readOnly = affi;
             this.form.edtRemise.readOnly = affi;
-            //this.erreur.edtNum.statut = "correct";
-            this.detailClient();
-           
-            const desLivraisons = new DesLivraisons()
-            this._dataLivraisons = desLivraisons.byNumLivraison(facture.livraison);
-
-            const lesProduitDansFacture = new LesProduitsDansFacture(facture.numero)
-            this._grille[0] = lesProduitDansFacture.all();
-            this.afficherContenue()
+            this.form.btnAjouterFacture.hidden = true;
+            this.form.edtLivraison.disabled = true;
+    
         }
 
-
-        this.afficheSelectLivraison(this._dataLivraison);
+        this.detailClient();
+        this.afficherContenue();
+        this.afficheSelectLivraison(this._dataLivraisons);
         this.initMsgErreur();
-        this.setDateOfToday();
-        this.genereNumFacture();
-        //this.affichageListe();
-        //this.selectLivraison();
-        //this.initMsgErreur();
 
 
         this.form.lblHt.textContent = "0.00" + "€";
@@ -259,7 +254,6 @@ class VueFactureEdit {
     }
 
     detailClient(): void {
-        const err = this.erreur.edtCodeDept
         const dataClient = this._dataClient;
         const detail = this.form.lblDetailClient;
         const valeur = vueFactureEdit.form.edtClient.value
@@ -271,12 +265,7 @@ class VueFactureEdit {
                 detail.textContent
                     = detailClient["civ"] + " " + detailClient["nom"] + " " + detailClient["prenom"] + "\r\n" + detailClient["adr"] + " - " + detailClient["cp"] + " " + detailClient["commune"] + "\r\n" + detailClient["mel"] + "\r\n" + "taux de remise maximum accordé : " + detailClient["remiseMax"] + "%";
             }
-            else {
-                err.statut = 'inconnu';
-                detail.textContent = err.msg.inconnu;
-            }
         }
-        else err.statut = 'vide';
     }
 
     detailProduit(): void {
@@ -318,7 +307,6 @@ class VueFactureEdit {
         let total = 0;
         const dataProduit = this._dataProduit
         for (let num in this.grille) {
-            alert(num)
             const unProduitDansFacture = this._grille[num]
             const unProduit = dataProduit[unProduitDansFacture.code]
             const table = this.form.tableContenue as HTMLTableElement;
@@ -332,6 +320,8 @@ class VueFactureEdit {
             tr.insertCell().textContent = unProduitDansFacture.qte;
             tr.insertCell().textContent = unProduit.prixTotal(unProduitDansFacture.qte);
 
+            const affi = this.params[0]==='affi'
+            if (!affi){
             let balisea: HTMLAnchorElement; // déclaration balise <a>
             // création balise <a> pour appel modification équipement dans salle
             balisea = document.createElement("a")
@@ -348,6 +338,7 @@ class VueFactureEdit {
             ht += parseInt(unProduit.prixTotal(unProduitDansFacture.qte), 10);
             remise += (parseInt(this.form.edtRemise.value, 10) / 100) * ht;
             total += ht - remise + liv;
+            }
         }
         this.form.lblHt.textContent = ht.toFixed(2) + "€";
         this.form.lblRemise.textContent = remise.toFixed(2) + "€";
@@ -355,19 +346,15 @@ class VueFactureEdit {
     }
 
     afficherGrille() {
-        this.verifQte();
+        //this.verifQte();
         const produitValue = this.form.listeContenue.value;
         const unProduit = this._dataProduit[produitValue];
 
         const qte = this.form.edtQte.value;
-        const nom = unProduit.nom;
+        const nom = unProduit["nom"];
         const code = unProduit["code"];
 
-        if (!this._grille) {
-            this._grille = {};
-        }
-
-        const unProduitDansFacture = new UnProduitDansFacture(code.toString(), nom, qte.toString());
+        const unProduitDansFacture = new UnProduitDansFacture(code.toString(), nom.toString(), qte.toString());
 
         this._grille[code] = unProduitDansFacture;
 
@@ -421,23 +408,23 @@ class VueFactureEdit {
         }
     }
 
-    verifListeEquipt(): void {
+    /*verifListeEquipt(): void {
         const err = this._erreur.listeContenue;
         err.statut = "correct";
         const cible = this._form.listeContenue;
         if (cible.value === "") {
             err.statut = 'vide'
         }
-    }
+    }*/
 
-    verifQte(): void {
+    /*verifQte(): void {
         const err = this._erreur.edtQte
         err.statut = "correct";
         const valeur: string = this._form.edtQte.value;
         if (!((Number.isInteger(Number(valeur))) && (Number(valeur) > 0))) {
             err.statut = 'vide'
         }
-    }
+    }*/
 
     setDateOfToday():void{
         const today = new Date();
