@@ -174,15 +174,15 @@ class LesFactures {
         return T;
     }
 
-    byNumFacture (num_facture : string) : UneFacture	{ // renvoie lâ€™objet correspondant Ã  la facutre num_facutre
-            let facutre = new UneFacture();
-            const facutres : TFactures = this.load(APIsql.sqlWeb.SQLloadData(this.prepare("num_fact = ?"),[num_facture]));
-            const lesCles: string[] = Object.keys(facutres);
-            // affecte les clÃ©s du tableau associatif Â« facutres Â» dans le tableau de chaines Â« lesCles Â»
+    byNumFacture (num_facture : string) : UneFacture	{ // renvoie lâ€™objet correspondant Ã  la facture num_facture
+            let facture = new UneFacture();
+            const factures : TFactures = this.load(APIsql.sqlWeb.SQLloadData(this.prepare("num_fact = ?"),[num_facture]));
+            const lesCles: string[] = Object.keys(factures);
+            // affecte les clÃ©s du tableau associatif Â« factures Â» dans le tableau de chaines Â« lesCles Â»
             if ( lesCles.length > 0) {
-                facutre = facutres[lesCles[0]];	// rÃ©cupÃ©rer le 1er Ã©lÃ©ment du tableau associatif Â« facutres Â»
+                facture = factures[lesCles[0]];	// rÃ©cupÃ©rer le 1er Ã©lÃ©ment du tableau associatif Â« factures Â»
             }
-            return facutre;
+            return facture;
 	}
 
     delete(num_fact: string): boolean {	// requÃªte de suppression dâ€™une facture dans la table

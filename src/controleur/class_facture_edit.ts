@@ -112,7 +112,7 @@ class VueFactureEdit {
 
 
         const affi = this.params[0] !== 'affi';
-        if (this.params[0] !== 'ajout') {	// affi ou modif ou suppr
+        if (this.params[0] === 'ajout') {	// affi ou modif ou suppr
             const facture = lesFactures.byNumFacture(this._params[1]);
 
             this.form.edtNum.value = facture.numero;
@@ -127,17 +127,18 @@ class VueFactureEdit {
             this.form.edtClient.readOnly = affi;
             this.form.edtRemise.readOnly = affi;
             //this.erreur.edtNum.statut = "correct";
-            //this.detailClient();
-            alert("1")
+            this.detailClient();
+           
+            const desLivraisons = new DesLivraisons()
+            this._dataLivraisons = desLivraisons.byNumLivraison(facture.livraison);
+
             const lesProduitDansFacture = new LesProduitsDansFacture(facture.numero)
-            this._grille = lesProduitDansFacture.all();
-            alert(this._grille[''])
-            alert("2")
+            this._grille[0] = lesProduitDansFacture.all();
             this.afficherContenue()
         }
 
 
-        this.afficheSelectLivraison();
+        this.afficheSelectLivraison(this._dataLivraison);
         this.initMsgErreur();
         this.setDateOfToday();
         this.genereNumFacture();
@@ -290,8 +291,7 @@ class VueFactureEdit {
         }
     }
 
-    afficheSelectLivraison() {
-        const dataLivraisons = this._dataLivraisons;
+    afficheSelectLivraison(dataLivraisons: TLivraisons) {
         for (let num in dataLivraisons) {
             const uneLivraisons: UneLivraison = dataLivraisons[num];
             this._form.edtLivraison.options.add(new Option(uneLivraisons.libForfait, uneLivraisons.idForfait));
@@ -318,6 +318,7 @@ class VueFactureEdit {
         let total = 0;
         const dataProduit = this._dataProduit
         for (let num in this.grille) {
+            alert(num)
             const unProduitDansFacture = this._grille[num]
             const unProduit = dataProduit[unProduitDansFacture.code]
             const table = this.form.tableContenue as HTMLTableElement;

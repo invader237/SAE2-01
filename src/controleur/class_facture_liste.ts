@@ -13,7 +13,7 @@ class VueFactureListe {
     private _uneFacture: UneFacture;
     private _dataClient: TClients;
     private _dataLivraisons: TLivraisons;
-    
+
 
 
     constructor() {
@@ -63,14 +63,17 @@ class VueFactureListe {
 
         for (let num in data) {
             const uneFacture: UneFacture = data[num];
-            const unClient : UnClient = this._dataClient[uneFacture.client];
-            const uneLivraisons : UneLivraison = this._dataLivraisons[uneFacture.livraison];
+            const unClient: UnClient = this._dataClient[uneFacture.client];
+            const uneLivraisons: UneLivraison = this._dataLivraisons[uneFacture.livraison]
 
             const tr = this.form.tableFacture.insertRow();
             let balisea: HTMLAnchorElement; // dÃ©claration balise <a>
             // crÃ©ation balise <a> pour appel page visualisation du dÃ©tail de la salle
             balisea = document.createElement("a")
             balisea.classList.add('img_visu')
+            balisea.onclick = function(): void {
+                vueFactureListe.detailFactureClick(uneFacture.numero)
+            }
             tr.insertCell().appendChild(balisea)
 
             tr.insertCell().textContent = uneFacture.numero;
@@ -79,18 +82,22 @@ class VueFactureListe {
             tr.insertCell().textContent = uneFacture.nomClient;
             tr.insertCell().textContent = unClient["commune"];
             tr.insertCell().textContent = uneFacture.prix + "€";
-            tr.insertCell().textContent = uneFacture.avecRemise()+ "€";
+            tr.insertCell().textContent = uneFacture.avecRemise() + "€";
             tr.insertCell().textContent = uneLivraisons["mtForfait"] + "€";
 
             // crÃ©ation balise <a> pour appel page modification du dÃ©tail de la salle
             balisea = document.createElement("a")
             balisea.classList.add('img_modification')
-            balisea.onclick = function(): void { vueFactureListe.modifierFactureClick(vueFactureListe.uneFacture.numero.toString()); }
+            balisea.onclick = function(): void {
+                vueFactureListe.modifierFactureClick(uneFacture.numero);
+            }
             tr.insertCell().appendChild(balisea)
             // crÃ©ation balise <a> pour appel page suppression d'une salle
             balisea = document.createElement("a")
             balisea.classList.add('img_corbeille')
-            balisea.onclick = function(): void { vueFactureListe.supprimerFactureClick(vueFactureListe.uneFacture.numero.toString()); }
+            balisea.onclick = function(): void {
+                vueFactureListe.supprimerFactureClick(uneFacture.numero);
+            }
             tr.insertCell().appendChild(balisea)
 
         }
