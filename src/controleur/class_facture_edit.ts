@@ -95,6 +95,7 @@ class VueFactureEdit {
         this.form.edtDate.disabled= true;
         
         this.form.divChoixTitre.hidden = true;
+        this.form.btnRetour.hidden = true;
         this.form.listeContenue.style.display = "none";
         this.form.edtContenueQte.style.display = "none";
 
@@ -114,6 +115,7 @@ class VueFactureEdit {
         this.setDateOfToday();
 
         const affi = this.params[0] === 'affi';
+        const modif = this.params[0] === 'modif';
         if (this.params[0] !== 'ajout') {	// affi ou modif ou suppr
             const facture = lesFactures.byNumFacture(this._params[1]);
             const dataLivraisons : TLivraisons= this._dataLivraisons
@@ -126,18 +128,30 @@ class VueFactureEdit {
             this.form.edtLivraison.options.add(new Option(uneLivraisons.libForfait));
 
 
-            this.form.edtNum.readOnly = affi;
+            this.form.edtNum.readOnly = true;
             this.form.edtLib.readOnly = affi;
-            this.form.edtDate.readOnly = affi;
+            this.form.edtDate.readOnly = true;
             this.form.edtClient.readOnly = affi;
             this.form.edtRemise.readOnly = affi;
-            this.form.btnAjouterFacture.hidden = true;
             this.form.edtLivraison.disabled = true;
-    
+            this.form.btnAnnuler.hidden = true;
+            this.form.btnRetour.hidden = false;
+            if( this.params[0] ==='modif'){
+            this.form.btnAjouterFacture.hidden = true;
+            this.form.edtLivraison.disabled = false;
+            this.form.btnAnnuler.hidden = false;
+            this.form.btnRetour.hidden = true;
+
+            this.form.btnAnnuler.onclick = function(): void {
+                vueFactureEdit.retourClick();
+            }
+            }
         }
 
         this.detailClient();
+        //this.changerPrixLivraison();
         this.afficherContenue();
+
         this.afficheSelectLivraison(this._dataLivraisons);
         this.initMsgErreur();
 
@@ -155,6 +169,10 @@ class VueFactureEdit {
         this.form.btnAnnulerEquipt.onclick = function(): void {
             vueFactureEdit.masquerFactureEdit();
         }
+        this.form.btnAnnuler.onclick = function(): void {
+            vueFactureEdit.retourClick();
+        }
+
         this.form.btnRetour.onclick = function(): void {
             vueFactureEdit.retourClick();
         }
@@ -356,7 +374,7 @@ class VueFactureEdit {
 
         const unProduitDansFacture = new UnProduitDansFacture(code.toString(), nom.toString(), qte.toString());
 
-        this._grille[code] = unProduitDansFacture;
+        this._grille[nom] = unProduitDansFacture;
 
         this.afficherContenue();
     }
