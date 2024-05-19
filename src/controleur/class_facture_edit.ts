@@ -84,12 +84,15 @@ class VueFactureEdit {
         this._params = location.search.substring(1).split('&');
         let titre: string;
         switch (this.params[0]) {
-            case 'suppr': titre = "Suppression d'une salle"; break;
-            case 'ajout': titre = "Nouvelle salle"; break;
-            case 'modif': titre = "Modification d'une salle"; break;
-            default: titre = "Détail d'une salle";
+            case 'suppr': titre = "Suppression d'une facture"; break;
+            case 'ajout': titre = "Nouvelle facture"; break;
+            case 'modif': titre = "Modification d'une facture"; break;
+            default: titre = "Détail d'une facture";
         }
         this.form.divTitre.textContent = titre;
+
+        this.form.edtNum.disabled= true;
+        this.form.edtDate.disabled= true;
         
         this.form.divChoixTitre.hidden = true;
         this.form.listeContenue.style.display = "none";
@@ -137,6 +140,7 @@ class VueFactureEdit {
         this.afficheSelectLivraison();
         this.initMsgErreur();
         this.setDateOfToday();
+        this.genereNumFacture();
         //this.affichageListe();
         //this.selectLivraison();
         //this.initMsgErreur();
@@ -441,6 +445,12 @@ class VueFactureEdit {
 
         // Définir la valeur par défaut pour le champ de type date
         this.form.edtDate.value = formattedDate;
+    }
+
+    genereNumFacture():void{
+        const uneFacture = new UneFacture;
+        const valeur= uneFacture.lastNumFact()
+        this.form.edtClient.value = valeur.toString();
     }
 }
 let vueFactureEdit = new VueFactureEdit;
