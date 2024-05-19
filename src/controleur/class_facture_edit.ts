@@ -145,6 +145,8 @@ class VueFactureEdit {
         //this.selectLivraison();
         //this.initMsgErreur();
 
+
+        this.form.lblHt.textContent = "0.00" + "€";
         this.form.edtClient.onchange = function(): void {
             vueFactureEdit.detailClient()
         }
@@ -343,9 +345,9 @@ class VueFactureEdit {
             tr.insertCell().appendChild(balisea)
 
             liv = parseInt(this._dataLivraisons[id].mtForfait, 10)
-            ht += parseInt(unProduit.prixTotal(unProduitDansFacture.qte), 10) + liv;
+            ht += parseInt(unProduit.prixTotal(unProduitDansFacture.qte), 10);
             remise += (parseInt(this.form.edtRemise.value, 10) / 100) * ht;
-            total += ht - remise;
+            total += ht - remise + liv;
         }
         this.form.lblHt.textContent = ht.toFixed(2) + "€";
         this.form.lblRemise.textContent = remise.toFixed(2) + "€";
@@ -450,7 +452,7 @@ class VueFactureEdit {
     genereNumFacture():void{
         const uneFacture = new UneFacture;
         const valeur= uneFacture.lastNumFact()
-        this.form.edtClient.value = valeur.toString();
+        this.form.edtNum.value = valeur.toString();
     }
 }
 let vueFactureEdit = new VueFactureEdit;
