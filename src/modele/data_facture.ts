@@ -30,8 +30,22 @@ class UneFacture {
         return this._numero
     }
 
+    set numero(value: string) {
+        if (!/^\d+$/.test(value)) {
+            throw new Error("Le numéro de la facture doit être un entier supérieur à 0.");
+        }
+        this._numero = value;
+    }
+
     get date(): string {
         return this._date
+    }
+
+    set date(value: string) {
+        if (new Date(value).toString() === "Invalid Date") {
+            throw new Error("La date de la facture est invalide.");
+        }
+        this._date = value;
     }
 
     get commentFact(): string {
@@ -54,38 +68,19 @@ class UneFacture {
         return this._remise
     }
 
+    set remise(value: string) {
+        const num = parseFloat(value);
+        if (isNaN(num) || num < 0 || num > 100) {
+            throw new Error("Le taux de remise doit être entre 0 et 100.");
+        }
+        this._remise = value;
+    }
+
     get livraison(): string {
         return this._livraison
     }
 
-    //set
-
-    set numero(numero: string) {
-        this._numero = numero
-    }
-    set date(date: string) {
-        this._date = date
-    }
-
-    set commentFact(commentFact: string) {
-        this._commentFact = commentFact;
-    }
-
-    set client(client: string) {
-        this._client = client
-    }
-    set nomClient(nomClient: string) {
-        this._nomClient = nomClient
-    }
-    set prix(prix: string) {
-        this._prix = prix
-    }
-    set remise(remise: string) {
-        this._remise = remise
-    }
-    set livraison(livraison: string) {
-        this._livraison = livraison
-    }
+    
 
     toArray(): APIsql.TtabAsso {
         // renvoie l’objet sous la forme d’un tableau associatif 

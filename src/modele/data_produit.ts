@@ -25,48 +25,68 @@ class UnProduit {
         return this._code
     }
 
+    set code(value: string) {
+        if (!value || value.length < 3 || value.length > 8) {
+            throw new Error("Le code produit doit contenir entre 3 et 8 caractères.");
+        }
+        this._code = value;
+    }
+
     get nom(): string {
         return this._nom
+    }
+
+    set nom(value: string) {
+        if (!value || value.length < 4) {
+            throw new Error("Le nom du produit doit contenir au moins 4 caractères.");
+        }
+        this._nom = value;
     }
 
     get type(): string {
         return this._type
     }
 
+    set type(value: string) {
+        if (value !== "plate" && value !== "pétillante") {
+            throw new Error("Le type de produit doit être 'plate' ou 'pétillante'.");
+        }
+        this._type = value;
+    }
+
     get origine(): string {
         return this._origine
+    }
+
+    set origine(value: string) {
+        if (!value || value.length < 3) {
+            throw new Error("L'origine du produit doit contenir au moins 3 caractères.");
+        }
+        this._origine = value;
     }
 
     get cond(): string {
         return this._cond
     }
 
+    set cond(value: string) {
+        const numericValue = parseInt(value);
+        if (isNaN(numericValue) || numericValue < 25 || numericValue > 200) {
+            throw new Error("Le conditionnement doit être un nombre entre 25 et 200.");
+        }
+        this._cond = value;
+    }
+
     get prixUnit(): string {
         return this._prixUnit
     }
 
-    set code(code: string) {
-        this._code = code;
-    }
-
-    set nom(nom: string) {
-        this._nom = nom;
-    }
-
-    set type(type: string) {
-        this._type = type;
-    }
-
-    set origine(origine: string) {
-        this._origine = origine
-    }
-
-    set cond(cond: string) {
-        this._cond = cond;
-    }
-
-    set prixUnit(prixUnit: string) {
-        this._prixUnit = prixUnit;
+    set prixUnit(value: string) {
+        const numericValue = parseFloat(value);
+        if (isNaN(numericValue) || numericValue <= 0) {
+            throw new Error("Le prix unitaire doit être un nombre positif.");
+        }
+        this._prixUnit = value;
     }
 
     toArray(): APIsql.TtabAsso {
