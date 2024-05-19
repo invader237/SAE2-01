@@ -113,7 +113,7 @@ class VueFactureEdit {
 
         this.genereNumFacture();
         this.setDateOfToday();
-
+        
         const affi = this.params[0] === 'affi';
         const modif = this.params[0] === 'modif';
         if (this.params[0] !== 'ajout') {	// affi ou modif ou suppr
@@ -137,6 +137,7 @@ class VueFactureEdit {
             this.form.btnAnnuler.hidden = true;
             this.form.btnRetour.hidden = false;
             this.form.btnValider.hidden = true;
+            this.form.btnAjouterFacture.hidden = true;
             if( this.params[0] ==='modif'){
             this.form.btnValider.hidden = false;
             this.form.edtLivraison.disabled = false;
@@ -151,7 +152,7 @@ class VueFactureEdit {
 
         this.detailClient();
         //this.changerPrixLivraison();
-        this.afficherContenue();
+        //this.afficherContenue();
 
         this.afficheSelectLivraison(this._dataLivraisons);
         this.initMsgErreur();
@@ -365,7 +366,7 @@ class VueFactureEdit {
     }
 
     afficherGrille() {
-        //this.verifQte();
+        this.verifQte();
         const produitValue = this.form.listeContenue.value;
         const unProduit = this._dataProduit[produitValue];
 
@@ -377,7 +378,7 @@ class VueFactureEdit {
             this._grille = {};
         }
 
-        const unProduitDansFacture = new UnProduitDansFacture(code.toString(), nom.toString(), qte.toString());
+        const unProduitDansFacture = new UnProduitDansFacture(code, nom, qte.toString());
 
         this._grille[code] = unProduitDansFacture;
 
@@ -441,14 +442,14 @@ class VueFactureEdit {
         }
     }*/
 
-    /*verifQte(): void {
+    verifQte(): void {
         const err = this._erreur.edtQte
         err.statut = "correct";
         const valeur: string = this._form.edtQte.value;
         if (!((Number.isInteger(Number(valeur))) && (Number(valeur) > 0))) {
             err.statut = 'vide'
         }
-    }*/
+    }
 
     setDateOfToday():void{
         const today = new Date();
