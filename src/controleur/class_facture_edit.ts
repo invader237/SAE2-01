@@ -124,17 +124,18 @@ class VueFactureEdit {
             this.form.edtClient.readOnly = affi;
             this.form.edtRemise.readOnly = affi;
             //this.erreur.edtNum.statut = "correct";
-            //this.detailClient();
-            alert("1")
+            this.detailClient();
+           
+            const desLivraisons = new DesLivraisons()
+            this._dataLivraisons = desLivraisons.byNumLivraison(facture.livraison);
+
             const lesProduitDansFacture = new LesProduitsDansFacture(facture.numero)
-            this._grille = lesProduitDansFacture.all();
-            alert(this._grille[''])
-            alert("2")
+            this._grille[0] = lesProduitDansFacture.all();
             this.afficherContenue()
         }
 
 
-        this.afficheSelectLivraison();
+        this.afficheSelectLivraison(this._dataLivraison);
         this.initMsgErreur();
         //this.affichageListe();
         //this.selectLivraison();
@@ -283,8 +284,7 @@ class VueFactureEdit {
         }
     }
 
-    afficheSelectLivraison() {
-        const dataLivraisons = this._dataLivraisons;
+    afficheSelectLivraison(dataLivraisons: TLivraisons) {
         for (let num in dataLivraisons) {
             const uneLivraisons: UneLivraison = dataLivraisons[num];
             this._form.edtLivraison.options.add(new Option(uneLivraisons.libForfait, uneLivraisons.idForfait));
@@ -312,6 +312,7 @@ class VueFactureEdit {
         let total = 0;
         const dataProduit = this._dataProduit
         for (let num in this.grille) {
+            alert(num)
             const unProduitDansFacture = this._grille[num]
             const unProduit = dataProduit[unProduitDansFacture.code]
             const table = this.form.tableContenue as HTMLTableElement;
