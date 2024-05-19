@@ -10,6 +10,10 @@
   grid-template-columns : 1fr 9fr; 
 }
 
+#edt_facture_num{
+  width: 80px;
+}
+
 .facture_commentaire {
   font-family: sans-serif;
   text-align : left;
@@ -103,7 +107,7 @@ label[for=edt_contenue_qte]{
 #delivery_fee{
   font-family: sans-serif;
   text-align : left;
-  font-size  : 1.2em;	
+  font-size  : 1em;	
   white-space: pre;
   position: relative;
   top: 5px;
