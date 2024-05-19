@@ -156,7 +156,7 @@ class VueFactureEdit {
 
         this.detailClient();
         //this.changerPrixLivraison();
-        //this.afficherContenue();
+        this.afficherGrille();
 
         this.afficheSelectLivraison(this._dataLivraisons);
         this.initMsgErreur();
@@ -414,10 +414,10 @@ class VueFactureEdit {
 
         // Remplir les champs du formulaire avec les détails du produit
         const dataProduit = this._dataProduit;
+        
         for (let num in dataProduit) {
             const unProduit: UnProduit = dataProduit[num];
             this._form.listeContenue.options.add(new Option(unProduit.nom, unProduit.code));
-
         }
     }
 
