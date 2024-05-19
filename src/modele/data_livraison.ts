@@ -5,7 +5,7 @@ class UneLivraison{
     private _libForfait: string;
     private _mtForfait: string;
 
-    constructor(idForfait: string, libForfait: string, mtForfait: string){
+    constructor(idForfait: string = "", libForfait: string = "", mtForfait: string = ""){
         this._idForfait= idForfait;
         this._libForfait= libForfait;
         this._mtForfait= mtForfait;
@@ -82,6 +82,18 @@ class DesLivraisons{
         }
         return T;
     }
+
+    byNumLivraison (id_forfait : string) : UneLivraison	{ // renvoie lâ€™objet correspondant Ã  la livraison num_livraison
+            let livraison = new UneLivraison();
+            const livraisons : TLivraisons = this.load(APIsql.sqlWeb.SQLloadData(this.prepare("id_forfait = ?"),[id_forfait]));
+            const lesCles: string[] = Object.keys(livraisons);
+            // affecte les clÃ©s du tableau associatif Â« livraisons Â» dans le tableau de chaines Â« lesCles Â»
+            if ( lesCles.length > 0) {
+                livraison = livraisons[lesCles[0]];	// rÃ©cupÃ©rer le 1er Ã©lÃ©ment du tableau associatif Â« livraisons Â»
+            }
+            return livraison;
+	}
+
 }
 
 export { UneLivraison };
