@@ -126,7 +126,7 @@ class VueFactureEdit {
             this.form.edtClient.value = facture.client;
             this.form.edtRemise.value = facture.remise;
             this.form.edtLivraison.options.add(new Option(uneLivraisons.libForfait));
-
+            this.form.prixLivraison.textContent= uneLivraisons.libForfait + ",\r\n" + uneLivraisons.mtForfait + "€";
 
             this.form.edtNum.readOnly = true;
             this.form.edtLib.readOnly = affi;
@@ -144,6 +144,11 @@ class VueFactureEdit {
                 this.form.edtLivraison.disabled = false;
                 this.form.btnAnnuler.hidden = false;
                 this.form.btnRetour.hidden = true;
+                
+                alert("2")
+                this._grille = new LesProduitsDansFacture(this.params[1]).all()
+                this.afficherContenue()
+                alert("3")
 
                 this.form.btnAnnuler.onclick = function(): void {
                 vueFactureEdit.retourClick();
@@ -342,7 +347,7 @@ class VueFactureEdit {
             tr.insertCell().textContent = unProduit.cond;
             tr.insertCell().textContent = unProduit.prixUnit;
             tr.insertCell().textContent = unProduitDansFacture.qte;
-            tr.insertCell().textContent = unProduit.prixTotal(unProduitDansFacture.qte);
+            tr.insertCell().textContent = parseInt(unProduit.prixTotal(unProduitDansFacture.qte),10).toFixed(2);
 
             const affi = this.params[0]==='affi'
             if (!affi){
@@ -357,11 +362,15 @@ class VueFactureEdit {
             balisea.classList.add('img_corbeille')
             balisea.onclick = function(): void { vueFactureEdit.supprimerProduitClick(unProduit.code); }
             tr.insertCell().appendChild(balisea)
+            try {
+                liv = parseInt(this._dataLivraisons[id].mtForfait, 10)
+                ht += parseInt(unProduit.prixTotal(unProduitDansFacture.qte), 10);
+                remise += (parseInt(this.form.edtRemise.value, 10) / 100) * ht;
+                total += ht - remise + liv;
+                }
+            catch{
 
-            liv = parseInt(this._dataLivraisons[id].mtForfait, 10)
-            ht += parseInt(unProduit.prixTotal(unProduitDansFacture.qte), 10);
-            remise += (parseInt(this.form.edtRemise.value, 10) / 100) * ht;
-            total += ht - remise + liv;
+                }
             }
         }
         this.form.lblHt.textContent = ht.toFixed(2) + "€";
