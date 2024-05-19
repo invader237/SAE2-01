@@ -101,9 +101,7 @@ class VueFactureListe {
             tr.insertCell().appendChild(balisea)
 
         }
-
     }
 }
-
 let vueFactureListe = new VueFactureListe;
 export { vueFactureListe }

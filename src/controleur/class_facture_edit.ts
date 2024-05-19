@@ -84,12 +84,15 @@ class VueFactureEdit {
         this._params = location.search.substring(1).split('&');
         let titre: string;
         switch (this.params[0]) {
-            case 'suppr': titre = "Suppression d'une salle"; break;
-            case 'ajout': titre = "Nouvelle salle"; break;
-            case 'modif': titre = "Modification d'une salle"; break;
-            default: titre = "Détail d'une salle";
+            case 'suppr': titre = "Suppression d'une facture"; break;
+            case 'ajout': titre = "Nouvelle facture"; break;
+            case 'modif': titre = "Modification d'une facture"; break;
+            default: titre = "Détail d'une facture";
         }
         this.form.divTitre.textContent = titre;
+
+        this.form.edtNum.disabled= true;
+        this.form.edtDate.disabled= true;
         
         this.form.divChoixTitre.hidden = true;
         this.form.listeContenue.style.display = "none";
@@ -137,10 +140,14 @@ class VueFactureEdit {
 
         this.afficheSelectLivraison(this._dataLivraison);
         this.initMsgErreur();
+        this.setDateOfToday();
+        this.genereNumFacture();
         //this.affichageListe();
         //this.selectLivraison();
         //this.initMsgErreur();
 
+
+        this.form.lblHt.textContent = "0.00" + "€";
         this.form.edtClient.onchange = function(): void {
             vueFactureEdit.detailClient()
         }
@@ -339,9 +346,9 @@ class VueFactureEdit {
             tr.insertCell().appendChild(balisea)
 
             liv = parseInt(this._dataLivraisons[id].mtForfait, 10)
-            ht += parseInt(unProduit.prixTotal(unProduitDansFacture.qte), 10) + liv;
+            ht += parseInt(unProduit.prixTotal(unProduitDansFacture.qte), 10);
             remise += (parseInt(this.form.edtRemise.value, 10) / 100) * ht;
-            total += ht - remise;
+            total += ht - remise + liv;
         }
         this.form.lblHt.textContent = ht.toFixed(2) + "€";
         this.form.lblRemise.textContent = remise.toFixed(2) + "€";
@@ -431,6 +438,22 @@ class VueFactureEdit {
         if (!((Number.isInteger(Number(valeur))) && (Number(valeur) > 0))) {
             err.statut = 'vide'
         }
+    }
+
+    setDateOfToday():void{
+        const today = new Date();
+
+        // Formater la date au format YYYY-MM-DD (ISO 8601)
+        const formattedDate = today.toISOString().slice(0, 10);
+
+        // Définir la valeur par défaut pour le champ de type date
+        this.form.edtDate.value = formattedDate;
+    }
+
+    genereNumFacture():void{
+        const uneFacture = new UneFacture;
+        const valeur= uneFacture.lastNumFact()
+        this.form.edtNum.value = valeur.toString();
     }
 }
 let vueFactureEdit = new VueFactureEdit;
