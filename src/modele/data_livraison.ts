@@ -15,12 +15,33 @@ class UneLivraison{
         return this._idForfait
     }
 
+    set idForfait(value: string) {
+        if (value.length < 3 || value.length > 6) {
+            throw new Error("L'identifiant doit être entre 3 et 6 caractères.");
+        }
+        this._idForfait = value;
+    }
+
     get libForfait(): string{
         return this._libForfait
     }
 
+    set libForfait(value: string) {
+        if (value.length < 5) {
+            throw new Error("Le libellé doit contenir au moins 5 caractères.");
+        }
+        this._libForfait = value;
+    }
+
     get mtForfait(): string{
         return this._mtForfait
+    }
+    
+    set mtForfait(value: string) {
+        if (parseFloat(value) <= 0) {
+            throw new Error("Le montant doit être un réel positif.");
+        }
+        this._mtForfait = value;
     }
 
     toArray(): APIsql.TtabAsso {
