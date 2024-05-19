@@ -51,7 +51,7 @@ type TErreur = {
 }
 
 class VueFactureEdit {
-    private _grille: TProduitDansFacture
+    private _grille: TProduitDansFacture;
     private _form: TFactureEditForm
     private _params: string[];
     private _dataProduit: TProduits;
@@ -373,19 +373,14 @@ class VueFactureEdit {
         this.verifQte();
         const produitValue = this.form.listeContenue.value;
         const unProduit = this._dataProduit[produitValue];
-
         const qte = this.form.edtQte.value;
         const nom = unProduit.nom;
         const code = unProduit["code"];
-
-        if (this._grille){
+        if (!this._grille) {
             this._grille = {};
         }
-
-        const unProduitDansFacture = new UnProduitDansFacture(code, nom, qte.toString());
-
+        const unProduitDansFacture = new UnProduitDansFacture(code.toString(), nom, qte.toString());
         this._grille[code] = unProduitDansFacture;
-
         this.afficherContenue();
     }
 
