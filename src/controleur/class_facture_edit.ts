@@ -98,6 +98,7 @@ class VueFactureEdit {
 
         this.afficheSelectLivraison();
         this.initMsgErreur();
+        this.setDateOfToday();
         //this.affichageListe();
         //this.selectLivraison();
         //this.initMsgErreur();
@@ -392,6 +393,16 @@ class VueFactureEdit {
         if (!((Number.isInteger(Number(valeur))) && (Number(valeur) > 0))) {
             err.statut = 'vide'
         }
+    }
+
+    setDateOfToday():void{
+        const today = new Date();
+
+        // Formater la date au format YYYY-MM-DD (ISO 8601)
+        const formattedDate = today.toISOString().slice(0, 10);
+
+        // Définir la valeur par défaut pour le champ de type date
+        this.form.edtDate.value = formattedDate;
     }
 }
 let vueFactureEdit = new VueFactureEdit;
