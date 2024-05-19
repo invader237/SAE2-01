@@ -112,7 +112,7 @@ class VueFactureEdit {
 
 
         const affi = this.params[0] !== 'affi';
-        if (this.params[0] !== 'ajout') {	// affi ou modif ou suppr
+        if (this.params[0] === 'ajout') {	// affi ou modif ou suppr
             const facture = lesFactures.byNumFacture(this._params[1]);
 
             this.form.edtNum.value = facture.numero;
