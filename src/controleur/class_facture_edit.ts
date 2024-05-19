@@ -92,7 +92,6 @@ class VueFactureEdit {
         this.form.divTitre.textContent = titre;
 
         this.form.edtNum.disabled= true;
-        this.form.edtDate.disabled= true;
         
         this.form.divChoixTitre.hidden = true;
         this.form.btnRetour.hidden = true;
@@ -116,6 +115,7 @@ class VueFactureEdit {
         
         const affi = this.params[0] === 'affi';
         const modif = this.params[0] === 'modif';
+        const ajout = this.params[1] === 'ajout';
         if (this.params[0] !== 'ajout') {	// affi ou modif ou suppr
             const facture = lesFactures.byNumFacture(this._params[1]);
             const dataLivraisons : TLivraisons= this._dataLivraisons
@@ -130,7 +130,7 @@ class VueFactureEdit {
 
             this.form.edtNum.readOnly = true;
             this.form.edtLib.readOnly = affi;
-            this.form.edtDate.readOnly = true;
+            this.form.edtDate.readOnly = affi;
             this.form.edtClient.readOnly = affi;
             this.form.edtRemise.readOnly = affi;
             this.form.edtLivraison.disabled = true;
@@ -139,14 +139,18 @@ class VueFactureEdit {
             this.form.btnValider.hidden = true;
             this.form.btnAjouterFacture.hidden = true;
             if( this.params[0] ==='modif'){
-            this.form.btnValider.hidden = false;
-            this.form.edtLivraison.disabled = false;
-            this.form.btnAnnuler.hidden = false;
-            this.form.btnRetour.hidden = true;
+                this.form.edtDate.readOnly = modif;
+                this.form.btnValider.hidden = false;
+                this.form.edtLivraison.disabled = false;
+                this.form.btnAnnuler.hidden = false;
+                this.form.btnRetour.hidden = true;
 
-            this.form.btnAnnuler.onclick = function(): void {
+                this.form.btnAnnuler.onclick = function(): void {
                 vueFactureEdit.retourClick();
+                }
             }
+            if (this.params[0] === 'ajout'){
+                this.form.edtDate.readOnly = false;
             }
         }
 
@@ -309,7 +313,7 @@ class VueFactureEdit {
 
     changerPrixLivraison() {
         const id = this.form.edtLivraison.value;
-        this.form.prixLivraison.textContent = this._dataLivraisons[id].libForfait + "," + this._dataLivraisons[id].mtForfait + "€";
+        this.form.prixLivraison.textContent = this._dataLivraisons[id].libForfait + ",\r\n" + this._dataLivraisons[id].mtForfait + "€";
     }
 
     retourClick(): void {
@@ -371,7 +375,7 @@ class VueFactureEdit {
         const unProduit = this._dataProduit[produitValue];
 
         const qte = this.form.edtQte.value;
-        const nom = unProduit["nom"];
+        const nom = unProduit.nom;
         const code = unProduit["code"];
 
         if (this._grille){
