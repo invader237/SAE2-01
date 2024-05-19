@@ -410,7 +410,7 @@ class VueFactureEdit {
 
     modifierProduitClick(id: string): void {
         // Afficher la section d'édition du produit
-        this.affichageProduit();
+        this.afficherFactureEdit();
 
         // Remplir les champs du formulaire avec les détails du produit
         const dataProduit = this._dataProduit;
