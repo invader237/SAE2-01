@@ -77,7 +77,7 @@ class VueFactureListe {
             tr.insertCell().appendChild(balisea)
 
             tr.insertCell().textContent = uneFacture.numero;
-            tr.insertCell().textContent = uneFacture.date;
+            tr.insertCell().textContent = this.convertDate(uneFacture.date);
             tr.insertCell().textContent = uneFacture.client;
             tr.insertCell().textContent = uneFacture.nomClient;
             tr.insertCell().textContent = unClient["commune"];
@@ -101,6 +101,21 @@ class VueFactureListe {
             tr.insertCell().appendChild(balisea)
 
         }
+    }
+    convertDate(dateString: string): string {
+        // Vérifier si la chaîne de caractères est dans le format attendu "YYYY-MM-DD"
+        const regex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!regex.test(dateString)) {
+            throw new Error("Le format de la date doit être 'YYYY-MM-DD'.");
+        }
+
+        // Découper la chaîne de caractères en parties (année, mois, jour)
+        const [year, month, day] = dateString.split('-');
+
+        // Reformater la date dans le format "DD/MM/YYYY"
+        const formattedDate = `${day}/${month}/${year}`;
+
+        return formattedDate;
     }
 }
 let vueFactureListe = new VueFactureListe;
